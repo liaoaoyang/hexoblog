@@ -21,7 +21,7 @@ Nagios可以使用邮件报警，但是如果使用IM软件提供的API进行报
 
 综上，选用PHP作为插件开发语言。
 
-选用PHP作为Nagios的开发语言，需要在脚本的首行指定 [Shebang][2] ，即指定PHP可执行程序的绝对路径，形如：
+选用PHP作为Nagios报警插件的开发语言，需要在脚本的首行指定 [Shebang][2] ，即指定PHP可执行程序的绝对路径，形如：
 
 ```
 #!/usr/local/server/bin/php
