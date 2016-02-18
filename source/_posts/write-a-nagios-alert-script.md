@@ -66,7 +66,7 @@ $level = isset($options['l']) ? $options['l'] : NOTIFICATION_LEVEL_NOTICE;
 $notification_type = isset($options['n']) ? $options['n'] : NOTIFICATION_TYPE_PROBLEM;
 ```
 
-限频的目的在于防止接收过多信息，使得必须处理的信息无法及时被发现。
+限频的目的在于防止接收过多信息，避免必须处理的信息无法及时被发现。
 
 而针对服务恢复正常的信息，不需要限频。
 
