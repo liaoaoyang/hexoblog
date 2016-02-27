@@ -6,7 +6,7 @@
 favicon: /favicon.ico
 
 # Set default keywords (Use a comma to separate)
-keywords: "Hexo, NexT"
+keywords: "Programmer"
 
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
@@ -183,7 +183,7 @@ mathjax:
 
 
 # Google Analytics
-#google_analytics:
+google_analytics: UA-74385074-1
 
 
 # Make duoshuo show UA
