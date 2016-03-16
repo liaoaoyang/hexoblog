@@ -4,7 +4,7 @@ categories: 系统
 tags: [Logstash, Elasticsearch]
 ---
 
-# 概述Logstash
+# 概述
 
 组内的日志系统基于ELK搭建，本文中的数据在生产环境中进行测试得到，仅供参考。
 
@@ -23,7 +23,7 @@ tags: [Logstash, Elasticsearch]
 
 # 运行环境
 
-`日志接收机`为CPU为4 * Xeon E5强IO型机器，*Redis List* 与向ES集群写入的 *Logstash* 位于同一机器上，即`日志数据处理机`，CPU为12 * Xeon E5。
+`日志接收机`为CPU为4 \* Xeon E5强IO型机器，*Redis List* 与向ES集群写入的 *Logstash* 位于同一机器上，即`日志数据处理机`，CPU为12 \* Xeon E5。
 
 处理日志为Nginx access日志，记录了如时间、域名、访问IP、URL、HTTP Method、响应时间、返回体长度等，约10+字段。
 
