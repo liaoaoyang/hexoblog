@@ -38,12 +38,18 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 
 对于解决的题目，将会在blog里贴出自己的解题方案以及简要的解题思路，同时在解题过程中，尽量通过完备自己的思路和case解决问题，而不是通过尝试AC来解决问题。
 
-# 已解决问题 \[2\]
+# 已解决问题 \[5\]
 
 
 [two-sum](https://leetcode.com/problems/two-sum/) `Easy`
 
 [add-two-numbers](https://leetcode.com/problems/add-two-numbers/) `Medium`
+
+[longest-substring-without-repeating-characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) `Medium`
+
+[median-of-two-sorted-arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) `Hard`
+
+[zigzag-conversion](https://leetcode.com/problems/zigzag-conversion/) `Easy`
 
 
 

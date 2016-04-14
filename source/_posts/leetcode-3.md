@@ -1,4 +1,4 @@
-title: leetcode-3
+title: LeetCode-3
 date: 2016-04-10 23:41:39
 categories: Try
 tags: LeetCode
