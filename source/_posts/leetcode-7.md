@@ -12,7 +12,7 @@ tags: LeetCode
 
 题目的特别之处在于溢出的处理，数字反转之后很可能超过了 `Integer.MAX_VALUE` 或者`Integer.MIN_VALUE` 的范围，应对这种情况，可以将溢出整数范围的的结果认定为0。
 
-参见 SO 上的问题 [How does Java handle integer underflows and overflows and how would you check for it?](http://stackoverflow.com/questions/3001836/how-does-java-handle-integer-underflows-and-overflows-and-how-would-you-check-fo), Java的处理方式是在两个极值之间轮转，超过最大值（`2147483647`），则从最小值开始逐步趋近最大值(` -2147483648`)，如：
+参见 SO 上的问题 [How does Java handle integer underflows and overflows and how would you check for it?](http://stackoverflow.com/questions/3001836/how-does-java-handle-integer-underflows-and-overflows-and-how-would-you-check-fo), Java的处理方式是在两个极值之间轮转，超过最大值（`2147483647`），则从最小值开始逐步趋近最小值(` -2147483648`)，如：
 
 ```java
 Long l = Long.parseLong("2147483648");
