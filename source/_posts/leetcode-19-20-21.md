@@ -112,4 +112,59 @@ public class Solution {
 }
 ```
 
+# 21 Merge Two Sorted Lists
+
+## 概述
+
+[Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/) 即单向链表归并。
+
+## 分析
+
+归并已排序链表，首先需要判断两个链表是否已经到达链表终点，达到链表终点之后只需要处理另一个没有到达终点的链表。
+
+在两个链表没有到达终点时，比较二者的首节点的值，在升序的情况下，较小的值添加到结果链表中，较小值所在的链表向前前进一个节点，之后周而复始的比较。
+
+## 解法
+
+```java
+public class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 == null) {
+            return null;
+        }
+
+        ListNode head = new ListNode(Integer.MIN_VALUE);
+        ListNode it = head;
+
+        while (l1 != null || l2 != null) {
+            int val = 0;
+
+            if (l1 == null) {
+                val = l2.val;
+                l2 = l2.next;
+            } else if (l2 == null) {
+                val = l1.val;
+                l1 = l1.next;
+            } else if (l1.val < l2.val) {
+                val = l1.val;
+                l1 = l1.next;
+            } else {
+                val = l2.val;
+                l2 = l2.next;
+            }
+
+            if (it.val == Integer.MIN_VALUE) {
+                it.val = val;
+                continue;
+            }
+
+            it.next = new ListNode(val);
+            it = it.next;
+        }
+
+        return head;
+    }
+}
+```
+
 
