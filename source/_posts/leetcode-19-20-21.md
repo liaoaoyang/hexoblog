@@ -20,7 +20,7 @@ tags: LeetCode
 
 ## 解法
 
-```
+```java
 public class Solution {
     public ListNode removeNthFromEnd(ListNode head, int n) {
         HashMap<Integer, ListNode> idxListMap = new HashMap<Integer, ListNode>();
@@ -54,4 +54,62 @@ public class Solution {
     }
 }
 ```
+
+# 20 Valid Parentheses
+
+## 概述
+
+[Valid Parentheses](https://leetcode.com/problems/valid-parentheses/) 即判断括号是否匹配。
+
+## 分析
+
+括号需要一一对应，即一个左括号，需要对应一个右括号，简单来说，在字符串遍历过程中，右括号出现之后，需要判断上一个括号是不是一个左括号，如果是一个左括号，那么说明这个括号完成了匹配。否则，说明没有完成匹配。
+
+从数据结构上来说，`栈`是一个非常适合的数据结构，左括号直接入栈，出现右括号则比较栈顶元素，如果相同，则出栈，继续比较，否则则说明不匹配。完成比较之后，如果栈已空，则说明括号完成了完全的匹配。
+
+但是，使用字符串操作其实也能做到这一效果，完全不需要使用 Java 内置的栈。即栈顶元素可以看成是字符串的最后一个元素，出栈则是删除最后一个字符串。
+
+## 解法
+
+```java
+public class Solution {
+	public boolean isValid(String s) {
+        String p = "";
+
+        for (int i = 0; i < s.length(); ++i) {
+            String c = s.substring(i, i + 1);
+
+            if ("([{".contains(c)) {
+                p = p + c;
+                continue;
+            }
+
+            if (")]}".contains(c)) {
+                if (p.length() == 0) {
+                    return false;
+                }
+
+                String topOfStack = p.substring(p.length() - 1, p.length());
+
+                if (c.equals(")") && !topOfStack.equals("(")) {
+                    return false;
+                }
+
+                if (c.equals("]") && !topOfStack.equals("[")) {
+                    return false;
+                }
+
+                if (c.equals("}") && !topOfStack.equals("{")) {
+                    return false;
+                }
+
+                p = p.substring(0, p.length() - 1);
+            }
+        }
+
+        return p.length() == 0;
+    }
+}
+```
+
 
