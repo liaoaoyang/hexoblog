@@ -84,10 +84,11 @@ $objCDefineContent = '';
 $androidClassContent = '';
 
 foreach ($constants as $k => $v) {
-    $spaceLength = $longestWordLength - strlen($k) + 1;
-    $objCOneLineTpl = "#define STATUS_CODE_%s%{$spaceLength}s@\"%s\"\n";
+    $spaceLength = $longestWordLength - strlen($k);
+    $spaceLength = $spaceLength <= 0 ? 1 : $spaceLength + 1;
+    $objCOneLineTpl = "#define StatusCode_%s%{$spaceLength}s@\"%s\"\n";
     $objCDefineContent .= sprintf($objCOneLineTpl, $k, ' ', $v);
-    $androidOneLineTpl = "\tpublic static final String %s%{$spaceLength}s = \"%s\";\n";
+    $androidOneLineTpl = "\tpublic static final String %s%{$spaceLength}s= \"%s\";\n";
     $androidClassContent .= sprintf($androidOneLineTpl, $k, ' ', $v);
 }
 
