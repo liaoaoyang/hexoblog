@@ -38,7 +38,7 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 
 对于解决的题目，将会在blog里贴出自己的解题方案以及简要的解题思路，同时在解题过程中，尽量通过完备自己的思路和case解决问题，而不是通过尝试AC来解决问题。
 
-# 已解决问题 \[15\]
+# 已解决问题 \[16\]
 
 
 [two-sum](https://leetcode.com/problems/two-sum/) `Easy`
@@ -70,6 +70,8 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 [Length of Last Word](https://leetcode.com/problems/length-of-last-word/) `Easy`
 
 [Rectangle Area](https://leetcode.com/problems/rectangle-area/) `Easy`
+
+[Ugly Number](https://leetcode.com/problems/ugly-number/) `Easy`
 
 
 [1]: http://blog.codingnow.com/
