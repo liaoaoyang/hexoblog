@@ -38,22 +38,31 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 
 对于解决的题目，将会在blog里贴出自己的解题方案以及简要的解题思路，同时在解题过程中，尽量通过完备自己的思路和case解决问题，而不是通过尝试AC来解决问题。
 
-# 已解决问题 \[18\]
+`2016年06月18日更新`
 
+对于过于简单的题目，将不会编写解题报告。
 
-[two-sum](https://leetcode.com/problems/two-sum/) `Easy`
+会挑选更有意思的一些题目。
 
-[add-two-numbers](https://leetcode.com/problems/add-two-numbers/) `Medium`
+# 已解决问题 \[40\]
 
-[longest-substring-without-repeating-characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) `Medium`
+[Two Sum](https://leetcode.com/problems/two-sum/) `Easy`
 
-[median-of-two-sorted-arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) `Hard`
+[Add Two Numbers](https://leetcode.com/problems/add-two-numbers/) `Medium`
 
-[zigzag-conversion](https://leetcode.com/problems/zigzag-conversion/) `Easy`
+[Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) `Medium`
+
+[Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) `Hard`
+
+[ZigZag Conversion](https://leetcode.com/problems/zigzag-conversion/) `Easy`
 
 [Reverse Integer](https://leetcode.com/problems/reverse-integer/) `Easy`
 
+[String to Integer (atoi)](https://leetcode.com/problems/string-to-integer-atoi/) `Easy`
+
 [Palindrome Number](https://leetcode.com/problems/palindrome-number/) `Easy`
+
+[Roman to Integer](https://leetcode.com/problems/roman-to-integer/) `Easy`
 
 [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/) `Easy`
 
@@ -69,13 +78,53 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 
 [Length of Last Word](https://leetcode.com/problems/length-of-last-word/) `Easy`
 
+[Plus One](https://leetcode.com/problems/plus-one/) `Easy`
+
+[Add Binary](https://leetcode.com/problems/add-binary/) `Easy`
+
+[Remove Duplicates from Sorted List](https://leetcode.com/problems/remove-duplicates-from-sorted-list/) `Easy`
+
+[Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/) `Easy`
+
+[Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits/) `Easy`
+
+[Remove Linked List Elements](https://leetcode.com/problems/remove-linked-list-elements/) `Easy`
+
+[Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/) `Easy`
+
+[Contains Duplicate](https://leetcode.com/problems/contains-duplicate/) `Easy`
+
 [Rectangle Area](https://leetcode.com/problems/rectangle-area/) `Easy`
 
+[Power of Two](https://leetcode.com/problems/power-of-two/) `Easy`
+
+[Delete Node in a Linked List](https://leetcode.com/problems/delete-node-in-a-linked-list/) `Easy`
+
+[Valid Anagram](https://leetcode.com/problems/valid-anagram/) `Easy`
+
+[Add Digits](https://leetcode.com/problems/add-digits/) `Easy`
+
 [Ugly Number](https://leetcode.com/problems/ugly-number/) `Easy`
+
+[First Bad Version](https://leetcode.com/problems/first-bad-version/) `Easy`
+
+[Move Zeroes](https://leetcode.com/problems/move-zeroes/) `Easy`
+
+[Word Pattern](https://leetcode.com/problems/word-pattern/) `Easy`
+
+[Range Sum Query - Immutable](https://leetcode.com/problems/range-sum-query-immutable/) `Easy`
 
 [Power of Three](https://leetcode.com/problems/power-of-three/) `Easy`
 
 [Power of Four](https://leetcode.com/problems/power-of-four/) `Easy`
+
+[Reverse String](https://leetcode.com/problems/reverse-string/) `Easy`
+
+[Reverse Vowels of a String](https://leetcode.com/problems/reverse-vowels-of-a-string/) `Easy`
+
+[Intersection of Two Arrays](https://leetcode.com/problems/intersection-of-two-arrays/) `Easy`
+
+[Intersection of Two Arrays II](https://leetcode.com/problems/intersection-of-two-arrays-ii/) `Easy`
 
 
 [1]: http://blog.codingnow.com/
