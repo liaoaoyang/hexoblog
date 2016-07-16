@@ -44,7 +44,7 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 
 会挑选更有意思的一些题目。
 
-# 已解决问题 \[40\]
+# 已解决问题 \[55\]
 
 [Two Sum](https://leetcode.com/problems/two-sum/) `Easy`
 
@@ -63,6 +63,8 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 [Palindrome Number](https://leetcode.com/problems/palindrome-number/) `Easy`
 
 [Roman to Integer](https://leetcode.com/problems/roman-to-integer/) `Easy`
+
+[Longest Common Prefix](https://leetcode.com/problems/longest-common-prefix/) `Easy`
 
 [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/) `Easy`
 
@@ -86,7 +88,31 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 
 [Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/) `Easy`
 
+[Pascal's Triangle](https://leetcode.com/problems/pascals-triangle/) `Easy`
+
+[Pascal's Triangle II](https://leetcode.com/problems/pascals-triangle-ii/) `Easy`
+
+[Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/) `Easy`
+
+[Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/) `Easy`
+
+[Min Stack](https://leetcode.com/problems/min-stack/) `Easy`
+
+[Excel Sheet Column Title](https://leetcode.com/problems/excel-sheet-column-title/) `Easy`
+
+[Majority Element](https://leetcode.com/problems/majority-element/) `Easy`
+
+[Excel Sheet Column Number](https://leetcode.com/problems/excel-sheet-column-number/) `Easy`
+
+[Factorial Trailing Zeroes](https://leetcode.com/problems/factorial-trailing-zeroes/) `Easy`
+
+[Rotate Array](https://leetcode.com/problems/rotate-array/) `Easy`
+
+[Reverse Bits](https://leetcode.com/problems/reverse-bits/) `Easy`
+
 [Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits/) `Easy`
+
+[Happy Number](https://leetcode.com/problems/happy-number/) `Easy`
 
 [Remove Linked List Elements](https://leetcode.com/problems/remove-linked-list-elements/) `Easy`
 
@@ -94,9 +120,13 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 
 [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/) `Easy`
 
+[Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/) `Easy`
+
 [Rectangle Area](https://leetcode.com/problems/rectangle-area/) `Easy`
 
 [Power of Two](https://leetcode.com/problems/power-of-two/) `Easy`
+
+[Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/) `Easy`
 
 [Delete Node in a Linked List](https://leetcode.com/problems/delete-node-in-a-linked-list/) `Easy`
 
