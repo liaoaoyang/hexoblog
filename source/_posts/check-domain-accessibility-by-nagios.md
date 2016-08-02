@@ -35,10 +35,10 @@ command[check_domain_accessibilty]=/path/to/plugins/check_domain_accessibility.s
 ```
 | 服务端 | 客户端  |
 | --- | --- |
-| \$ARG1$ | check_domain_accessibilty |
-| \$ARG2$ | \$ARG1$ |
-| \$ARG3$ | \$ARG2$ |
-| \$ARG4$ | \$ARG3$ |
+| $ARG1$ | check_domain_accessibilty |
+| $ARG2$ | $ARG1$ |
+| $ARG3$ | $ARG2$ |
+| $ARG4$ | $ARG3$ |
 
 
 可以看到的对应关系为：
