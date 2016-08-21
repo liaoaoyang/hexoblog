@@ -44,7 +44,7 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 
 会挑选更有意思的一些题目。
 
-# 已解决问题 \[58\]
+# 已解决问题 \[60\]
 
 [Two Sum](https://leetcode.com/problems/two-sum/) `Easy`
 [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/) `Medium`
@@ -70,6 +70,7 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 [Pascal's Triangle](https://leetcode.com/problems/pascals-triangle/) `Easy`
 [Pascal's Triangle II](https://leetcode.com/problems/pascals-triangle-ii/) `Easy`
 [Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/) `Easy`
+[Valid Palindrome](https://leetcode.com/problems/valid-palindrome/) `Easy`
 [Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/) `Easy`
 [Min Stack](https://leetcode.com/problems/min-stack/) `Easy`
 [Excel Sheet Column Title](https://leetcode.com/problems/excel-sheet-column-title/) `Easy`
@@ -104,7 +105,7 @@ OJ在学生时代应该都有所接触，作为程序设计与算法课程的实
 [Intersection of Two Arrays II](https://leetcode.com/problems/intersection-of-two-arrays-ii/) `Easy`
 [Sum of Two Integers](https://leetcode.com/problems/sum-of-two-integers/) `Easy`
 [Guess Number Higher or Lower](https://leetcode.com/problems/guess-number-higher-or-lower/) `Easy`
-
+[Ransom Note](https://leetcode.com/problems/ransom-note/) `Easy`
 
 [1]: http://blog.codingnow.com/
 [2]: http://weibo.com/2388714105/DjvJZC1Qc

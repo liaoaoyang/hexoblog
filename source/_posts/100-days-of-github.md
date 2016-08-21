@@ -6,5 +6,5 @@ categories: Try
 
 ![100-days-of-github](http://blog.wislay.com/wp-content/uploads/2016/08/100-days-of-github.png)
 
-mark
+100天的连续提交，写了26篇blog，解了59道LeetCode，写了若干个脚本。
 
