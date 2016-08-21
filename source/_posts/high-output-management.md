@@ -1,4 +1,4 @@
-title: 格鲁夫给经理人的第一课
+title: 《格鲁夫给经理人的第一课》
 date: 2016-08-14 17:38:34
 tags: [Career]
 categories: Reading
