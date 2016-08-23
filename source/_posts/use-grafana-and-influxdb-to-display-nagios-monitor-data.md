@@ -1,4 +1,4 @@
-title: 使用Grafana+Influxdb展示Nagios监控数据
+title: 使用Grafana+InfluxDB展示Nagios监控数据
 date: 2016-08-23 21:32:26
 tags: [Nagios, InfluxDB, Grafana]
 categories: 系统
