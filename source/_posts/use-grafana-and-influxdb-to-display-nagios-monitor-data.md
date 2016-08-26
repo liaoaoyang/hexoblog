@@ -58,6 +58,8 @@ Nagios只能看到“现在”的数据，无法回顾历史以及查看趋势�
 
 [graphios](https://github.com/shawn-sterling/graphios)可以相当便捷的完成这一工作。这是一个将Nagios perf data写入到InfluxDB中的工具。配置也相当便捷，基本上按照README即可完成。
 
+[Nagflux](https://github.com/Griesbacher/nagflux)看起来也是不错，然而问题在于这个适用于`4.x`版本的Nagios，在不打算升级Nagios的情况下，只能放弃。
+
 但是，凡事总有例外，使用软件的特定组合的情况下，会出现一些问题。
 
 ### 数据解析异常
