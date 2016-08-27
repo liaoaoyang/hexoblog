@@ -42,6 +42,61 @@ Nagios只能看到“现在”的数据，无法回顾历史以及查看趋势�
 
 最终选择Grafana作为展示端。
 
+## 数据内容
+
+提一下数据内容。
+
+在这个方案中，我们展现的数据，实际上是Nagios插件产生的Performance Data（或者叫`PERFDATA`），如果自行编写的插件没有按照 `PERFDATA` 的格式输出信息，是不会被收集到InfluxDB中的。如果有自行编写业务监控插件，除了基本的返回码和错误信息之外，要考虑按照标准输出相关的信息，以便收集到InfluxDB中。
+
+Nagios 3的插件多行输出格式为：
+
+<font color="red">TEXT OUTPUT</font> | <font color="#FFAA10">OPTIONAL PERFDATA</font>
+<font color="blue">LONG TEXT LINE 1
+LONG TEXT LINE 2
+...
+LONG TEXT LINE N</font> | <font color="#FFAA10">PERFDATA LINE 2
+PERFDATA LINE 3
+...
+PERFDATA LINE N</font>
+
+如磁盘信息的收集，单行模式很好理解，通过 `|` 分隔输出信息以及 `PERFDATA`；多行模式的话，引用官网的例子：
+
+<font color="red">DISK OK - free space: / 3326 MB (56%);</font> | <font color="#FFAA10">/=2643MB;5948;5958;0;5968</font>
+<font color="blue">/ 15272 MB (77%);
+/boot 68 MB (69%);
+/home 69357 MB (27%);
+/var/log 819 MB (84%);</font> | <font color="#FFAA10">/boot=68MB;88;93;0;98
+/home=69357MB;253404;253409;0;253414
+/var/log=818MB;970;975;0;980</font>
+
+第一行仍然可以按照单行模式进行理解（<font color="red">红色</font>部分是输出信息，<font color="#FFAA10">橙色</font>部分是 `PERFDATA`），从第二行开始，每行一个输出信息，最后将剩余的 `PERFDATA` 紧接着输出信息的最后一行，通过 `|` 分隔，逐行输出。
+
+每项 `PERFDATA` 格式为：
+
+```
+'label'=value[UOM];[warn];[crit];[min];[max]
+```
+
+引用上述例子的数据 `/=2643MB;5948;5958;0;5968`，可以看到对应关系为：
+
+
+| label | / |
+| --- | --- |
+| value | 263MB  |
+| warn | 5498 |
+| crit | 5958 |
+| min | 0 |
+| max | 5968 |
+
+`UOM` 表示 `unit of measurement`，即单位，可以是：
+
++ 不设定（即数字）
++ 秒`s`（或者`ms`或`us`）
++ 百分数`%`
++ 字节`B`（或者`KB`, `MB`, `TB`）
+
+详情可以参阅 [Nagios Plugin Development Guidelines](https://nagios-plugins.org/doc/guidelines.html) 以及 [Nagios Plugin API](https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/3/en/pluginapi.html)。
+
 ## 数据落地
 
 只有Grafana是不能完成期望的工作的，Grafana只是展现工具，需要有数据源才能展现。
