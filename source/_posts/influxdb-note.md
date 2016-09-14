@@ -18,6 +18,6 @@ InfluxDB 使用 go 语言编写。个人认为几个外在的优点在于：
 4. 类SQL查询语句（再提ES，查询使用自己的DSL，虽然也可以通过sql插件来使用类SQL进行查询）；
 5. 自带权限管理，精细到“表”级别；
 
-
+这些好处[官网](https://docs.influxdata.com/influxdb/v1.0/)都有提及。
 
 
