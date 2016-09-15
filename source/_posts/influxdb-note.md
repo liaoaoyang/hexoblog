@@ -20,4 +20,12 @@ InfluxDB 使用 go 语言编写。个人认为几个外在的优点在于：
 
 这些好处[官网](https://docs.influxdata.com/influxdb/v1.0/)都有提及。
 
+# 关键概念
+
+## fields
+
+`Fields` 在 InfluxDB 中是必须的数据结构的组成部分。
+
+## tags
+
 
