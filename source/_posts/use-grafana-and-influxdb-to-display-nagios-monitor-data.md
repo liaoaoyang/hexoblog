@@ -51,23 +51,23 @@ Nagios只能看到“现在”的数据，无法回顾历史以及查看趋势�
 Nagios 3的插件多行输出格式为：
 
 <font color="red">TEXT OUTPUT</font> | <font color="#FFAA10">OPTIONAL PERFDATA</font>
-<font color="blue">LONG TEXT LINE 1
-LONG TEXT LINE 2
-...
-LONG TEXT LINE N</font> | <font color="#FFAA10">PERFDATA LINE 2
-PERFDATA LINE 3
-...
-PERFDATA LINE N</font>
+<font color="blue">LONG TEXT LINE 1</font>
+<font color="blue">LONG TEXT LINE 2</font>
+<font color="blue">...</font>
+<font color="blue">LONG TEXT LINE N</font> | <font color="#FFAA10">PERFDATA LINE 2</font>
+<font color="#FFAA10">PERFDATA LINE 3</font>
+<font color="#FFAA10">...</font>
+<font color="#FFAA10">PERFDATA LINE N</font>
 
 如磁盘信息的收集，单行模式很好理解，通过 `|` 分隔输出信息以及 `PERFDATA`；多行模式的话，引用官网的例子：
 
 <font color="red">DISK OK - free space: / 3326 MB (56%);</font> | <font color="#FFAA10">/=2643MB;5948;5958;0;5968</font>
-<font color="blue">/ 15272 MB (77%);
-/boot 68 MB (69%);
-/home 69357 MB (27%);
-/var/log 819 MB (84%);</font> | <font color="#FFAA10">/boot=68MB;88;93;0;98
-/home=69357MB;253404;253409;0;253414
-/var/log=818MB;970;975;0;980</font>
+<font color="blue">/ 15272 MB (77%);</font>
+<font color="blue">/boot 68 MB (69%);</font>
+<font color="blue">/home 69357 MB (27%);</font>
+<font color="blue">/var/log 819 MB (84%);</font> | <font color="#FFAA10">/boot=68MB;88;93;0;98</font>
+<font color="#FFAA10">/home=69357MB;253404;253409;0;253414</font>
+<font color="#FFAA10">/var/log=818MB;970;975;0;980</font>
 
 第一行仍然可以按照单行模式进行理解（<font color="red">红色</font>部分是输出信息，<font color="#FFAA10">橙色</font>部分是 `PERFDATA`），从第二行开始，每行一个输出信息，最后将剩余的 `PERFDATA` 紧接着输出信息的最后一行，通过 `|` 分隔，逐行输出。
 
