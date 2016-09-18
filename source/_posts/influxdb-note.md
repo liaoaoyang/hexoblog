@@ -214,18 +214,18 @@ graphios 使用 InfluxDB 作为存储后端，首先完成的步骤，是将 PER
 
 ```
 def format_metric(self, timestamp, path, tags, value):
-        if not self.influxdb_line_protocol:
-            return {
-                    "timestamp": timestamp,
-                    "measurement": path,
-                    "tags": tags,
-                    "fields": {"value": value}}
+    if not self.influxdb_line_protocol:
+        return {
+            "timestamp": timestamp,
+            "measurement": path,
+            "tags": tags,
+            "fields": {"value": value}}
         return '%s,%s value=%s %d' % (
-                path,
-                ','.join(['%s=%s' % (k, v) for k, v in tags.iteritems() if v]),
-                value,
-                timestamp * 10 ** 9
-                )
+	         path,
+	         ','.join(['%s=%s' % (k, v) for k, v in tags.iteritems() if v]),
+	         value,
+	         timestamp * 10 ** 9
+	    )
 ```
 
 ## 生成Measurement
