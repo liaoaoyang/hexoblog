@@ -248,11 +248,11 @@ def format_metric(self, timestamp, path, tags, value):
 
 `/=2643MB,/boot=68MB,/home=69357MB,/var/log=818MB`
 
-由于 Nagios 中 `/` 一般被设定为需要转义的字符，所以，写入数据库是，可能会被转换为：
+由于 Nagios 中 `/` 一般被设定为需要转义的字符，所以，写入数据库时，可能会被转换为：
 
 `_=2643MB,_boot=68MB,_home=69357MB,_var_log=818MB`
 
-至于比如 PERFDATA 中的 `WARNING` `CRITICAL` 等标识去哪里了，可以看到提交 sha 值为[8aa93b](https://github.com/shawn-sterling/graphios/commit/8aa93b6ea3895777c5d8e372d72d253c4f511a42) 的 `graphios.py` 文件的358行的 `process_log`方法，文件387行开始：
+至于如 PERFDATA 中的 `WARNING` `CRITICAL` 等标识去哪里了，可以看到提交 sha 值为[8aa93b](https://github.com/shawn-sterling/graphios/commit/8aa93b6ea3895777c5d8e372d72d253c4f511a42) 的 `graphios.py` 文件的358行的 `process_log`方法，文件387行开始：
 
 ```
 (nobj.LABEL, d) = metric.split('=')
