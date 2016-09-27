@@ -12,6 +12,10 @@ categories: Try
 
 使用 Laravel 的 CMS 不少，有本文的主角[October CMS](https://github.com/octobercms/october)、[Asgard CMS](https://github.com/AsgardCms)、[Lavalite](https://github.com/LavaLite/cms)，但是后续的这些，无论从 GitHub star数目上，还是更新频率上，以及社区活跃度上，完全无法与 October CMS 相提并论。
 
-于是决定简单了解一下October CMS。
+于是决定简单了解一下October CMS（以下简称October）。
+
+# 需求
+
+October宣传自身是一个简单、现代、以人为本、通用的、可拓展的、有趣的、可靠地、易学、节省时间的CMS。
 
 
