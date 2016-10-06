@@ -158,8 +158,11 @@ InnoDB的全文索引也使用的是倒排索引的设计，分词完成的词�
 
 在加入GTID之后，重启从库之后，不需要重新进行位置的指向，只需要连接到主库即可，剩下的步骤将会是自动的。
 
-
 ### 5.7
+
+#### InnoDB
+
+InnoDB地位进一步增强，这一次系统表已然变成了基于InnoDB存储引擎的表。并且也不能禁用InnoDB存储引擎了。
 
 #### 增强的多线程复制
 
@@ -169,6 +172,12 @@ InnoDB的全文索引也使用的是倒排索引的设计，分词完成的词�
 
 即将多个主库的数据归并到一个从库的实例上。
 
+之前的MySQL，每个从库都只能拥有一个主库，如今MySQL提供了官方的解决方案，用于将多个主库的数据同步到一个从库之上。
+
+多源复制有一个关键概念，即频道（channel）。频道指代一个主从库之间用于同步binlog的连接，通过新增的`FOR CHANNEL`子句，指定一个非空的频道名称，按照先前版本的连接主库的方法，即可实现多源复制功能。
+
+需要注意的是，当多个主库均写入同一张表时，是要自行处理主键冲突。
+
 #### JSON数据类型操作
 
 PostgreSQL 9.3开始，PostgreSQL中JSON成为了内置的数据类型。
@@ -177,13 +186,57 @@ PostgreSQL 9.3开始，PostgreSQL中JSON成为了内置的数据类型。
 
 到了5.7之后，JSON支持也被加入。
 
+JSON中的字符串在MySQL中会被转化成`utf8mb4`的字符集，给携带诸如emoji字符的数据的存储带来了方便。
+
+对于JSON数据的结构特性，MySQL中对JSON的查询需要借助path expression以及`JSON_EXTRACT`方法进行查询。path expression的简要要点如下：
+
++ 以`$`符号开头
++ `.`符号紧接着的是对象中的key
++ `[n]`中表示的是数组中的第n个元素，n>=0
++ `.[*]`表示一个key下的所有对象
++ `[*]`表示一个key下所有的数组
++ `exp_a**exp_b`则表示path中带有`exp_a`与`exp_b`的值
++ key如果包含特殊字符，需要通过双引号包裹起来
+
+更多操作参见[手册](http://dev.mysql.com/doc/refman/5.7/en/json.html)。
+
 #### innodb_buffer_pool_size参数动态修改
 
 在之前的版本中，`innodb_buffer_pool_size`调整之后，需要重启数据库实例，这个对于线上业务几乎是不可接受的。硬件性能强悍的服务器，调整这一参数之后，MySQL的表现会有较为客观的提升。
 
 到了MySQL 5.7，这一参数终于可以在线调整了。
 
+#### 初始化工具
 
+在之前的版本中，初始化系统表一般都会使用`mysql_install_db`脚本，到MySQL 5.7之后建议使用`mysqld --initialize`完成实例初始化。
+
+在通过`mysqld --initialize`进行初始化时，需要加上`--initial-insecure`才能实现空密码登录，否则会将初始化的默认密码写入到错误文件中。
+
+初始化完成之后，还需要使用MySQL 5.7版本的客户端登录，并且修改默认密码。
+
+### 8.0
+
+作为版本号突飞猛进的一个版本，在MySQL 8.0中新增了如下的特性：
+
+#### 用户角色
+
+8.0中将会增强账号管理的功能，提供`角色`这一概念，即能组合权限，批量授权给某一用户。
+
+#### 增强的InnoDB
+
++ 自增id会写入到redo log中，这一改动使得数据库重启之后的自增值能恢复到重启前的状态
++ 增加了死锁检测开关`innodb_deadlock_detect`，可以在高并发系统中动态调整这一特性，提升性能
+
+#### 增强的JSON操作
+
++ 增加了`->>`操作符，使用这一操作符等同于对`JSON_EXTRACT`的结果进行`JSON_UNQUOTE`操作，简化了SQL语句
++ 增加了按JSON数据组织返回数据操作的两个方法：`JSON_ARRAYAGG`与`JSON_OBJECTAGG`。`JSON_ARRAYAGG`将某列的值按照一个JSON数据返回，而`JSON_OBJECTAGG`将列A作为键，列B作为值，返回一个JSON对象格式的数据
+
+后续将会继续更新本文。
+
+# 相关
+
+\[1]: [What’s New in MySQL 5.7? (So Far)](http://mysqlserverteam.com/whats-new-in-mysql-5-7-so-far/)
 
 
 
