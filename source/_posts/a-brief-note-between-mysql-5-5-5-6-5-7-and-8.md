@@ -248,6 +248,8 @@ JSON中的字符串在MySQL中会被转化成`utf8mb4`的字符集，给携带�
 
 \[1]: [What’s New in MySQL 5.7? (So Far)](http://mysqlserverteam.com/whats-new-in-mysql-5-7-so-far/)
 
+\[2]: [MySQL 5.7版本新特性连载（一）](http://imysql.com/2015/06/23/mysql-57-new-feature-part-1.shtml)
+
 
 
 
