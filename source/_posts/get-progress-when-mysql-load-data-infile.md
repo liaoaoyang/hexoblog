@@ -123,8 +123,46 @@ cat /proc/[PID]/fdinfo/[fd]
 
 根据`pos`可以知道当前已读取了的文件位置，进而获知LOAD进度。
 
+# 工具化
+
+参见[GitHub](https://github.com/liaoaoyang/toolbox/blob/master/scripts/mysql/mysql_load_progress.sh);
+
+用法：
+
+```
+./mysql_load_progress.sh /full/path/to/loading/file
+```
+
+代码：
+
+```
+#!/bin/sh
+
+LOAD_FILE_NAME=$1
+
+if [ ! -f $LOAD_FILE_NAME ];then
+	echo "No such file"
+	exit
+fi
+
+MYSQL_PIDS=`ps -ef | grep mysql | awk '{print $2}'`
+fsize=`ls -l $LOAD_FILE_NAME | awk '{print $5}'`
+
+for pid in $MYSQL_PIDS
+do
+    fd=`lsof -p $pid | grep $LOAD_FILE_NAME | grep -vE "grep|sh -c" | awk '{print $4}' | grep -oP '\d+(?=r)'`
+
+    if [ -f  /proc/$pid/fdinfo/$fd ];then
+        read_pos=`cat /proc/$pid/fdinfo/$fd  | grep pos | awk "{print \\$2/$fsize*100\"%\"}"`
+        echo $LOAD_FILE_NAME" "$read_pos
+    fi
+done
+```
+
 以上。
 
 [1]: http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/proc.html
 [2]: http://man7.org/linux/man-pages/man5/proc.5.html
 [3]: http://dev.mysql.com/doc/refman/5.7/en/load-data.html
+
+
