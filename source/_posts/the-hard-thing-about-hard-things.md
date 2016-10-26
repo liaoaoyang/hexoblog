@@ -4,6 +4,8 @@ tags: [Horowitz, Startup, Career]
 categories: Reading
 ---
 
+![The.Hard.Thing.About.Hard.Things](http://blog.wislay.com/wp-content/uploads/2016/10/The.Hard_.Thing_.About_.Hard_.Things.jpg)
+
 # 概述
 
 《[创业维艰](https://book.douban.com/subject/26306686/)》是今年来读过的印象较为深刻的书籍。
