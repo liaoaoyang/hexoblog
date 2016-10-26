@@ -186,7 +186,7 @@ InnoDB地位进一步增强，这一次系统表已然变成了基于InnoDB存�
 
 多源复制有一个关键概念，即频道（channel）。频道指代一个主从库之间用于同步binlog的连接，通过新增的`FOR CHANNEL`子句，指定一个非空的频道名称，按照先前版本的连接主库的方法，即可实现多源复制功能。
 
-需要注意的是，当多个主库均写入同一张表时，是要自行处理主键冲突。
+需要注意的是，当多个主库均写入同一张表时，需要自行处理主键冲突。
 
 #### JSON数据类型操作
 
@@ -247,6 +247,8 @@ JSON中的字符串在MySQL中会被转化成`utf8mb4`的字符集，给携带�
 # 相关
 
 \[1]: [What’s New in MySQL 5.7? (So Far)](http://mysqlserverteam.com/whats-new-in-mysql-5-7-so-far/)
+
+\[2]: [MySQL 5.7版本新特性连载（一）](http://imysql.com/2015/06/23/mysql-57-new-feature-part-1.shtml)
 
 
 
