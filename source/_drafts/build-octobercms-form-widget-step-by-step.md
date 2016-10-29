@@ -89,6 +89,17 @@ OctoberCMS的表单组件通过yaml配置文件的形式，将数据库字段与
 
 ## 组件目录结构
 
+OctoberCMS的表单插件需要符合一定的目录结构规则。
+
+可以通过直接创建对应的目录以及文件，也可以通过内置的工具进行初始化：
+
+```
+php artisan create:formwidget rainlab.blog RelatedRecords
+```
+
+`rainlab.blog` 是将要创建这一组件的插件的名称，这里可以换成自己插件的名字。关于插件，参见[OctoberCMS的手册](http://octobercms.com/docs/plugin/registration)。
+
+
 ## 组件实现细节
 
 ## 组件效果
