@@ -133,6 +133,8 @@ cat /proc/[PID]/fdinfo/[fd]
 ./mysql_load_progress.sh /full/path/to/loading/file
 ```
 
+输入文件名需要是完整路径。
+
 代码：
 
 ```
