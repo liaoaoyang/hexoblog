@@ -37,19 +37,19 @@ October宣传自身是一个简单、现代、以人为本、通用的、可拓�
 + 表单插件可以显示相关记录的`头图`，`标题`，`摘要`
 + 相关记录可以调整顺序
 
-# OctoberCMS 表单组件
+# OctoberCMS 表单部件
 
 OctoberCMS的有一类组件，被称为[`Form`](https://octobercms.com/docs/backend/forms)组件，为后台操作数据提供了极大的方便，通过配置各种Form插件的组合，可以对数据进行操作。
 
 常规的管理界面的开发，一种模式是通过编写接口，提供修改对应数据的功能，并且前端开发需要构建对应的操作界面。对于CMS系统，这样无疑是一个低效的行为，使得管理平台开发也成为了开发工作的一大负担，提供更为简便的管理平台开发方式，对于减少开发工作量有很大意义。
 
-OctoberCMS的表单组件通过yaml配置文件的形式，将数据库字段与前端编辑表单组件关联起来，为快速构建针对于数据的管理界面提供了可能。
+OctoberCMS的表单部件通过yaml配置文件的形式，将数据库字段与前端编辑表单部件关联起来，为快速构建针对于数据的管理界面提供了可能。
 
 针对于基本的字符串，时间选择器，富文本编辑器，单选/复选框，OctoberCMS也都默认提供了。
 
 ## 组件设计
 
-对于表单组件，功能上可以一言概之，即通过图形方式构建JSON格式的字符串，并写入数据库。
+对于表单部件，功能上可以一言概之，即通过图形方式构建JSON格式的字符串，并写入数据库。
 
 ### 设计细化
 
@@ -123,9 +123,9 @@ php artisan create:formwidget rainlab.blog RelatedRecords
             └── _relatedrecords.htm
 ```
 
-文件不多，简而言之，`RelatedRecords.php`用来描述表单组件以及编写处理逻辑，`relatedrecords.css`自然是控制表单后台操作样式，`relatedrecords.js`则是实现表单项目在后台的前端操作逻辑，最后`partials`中的`_relatedrecords.htm`则定义了表单组件在后台的html展示部分。
+文件不多，简而言之，`RelatedRecords.php`用来描述表单部件以及编写处理逻辑，`relatedrecords.css`自然是控制表单后台操作样式，`relatedrecords.js`则是实现表单项目在后台的前端操作逻辑，最后`partials`中的`_relatedrecords.htm`则定义了表单部件在后台的html展示部分。
 
-如果不想通过内置工具生成表单组件，同样也可以直接在对应plugin的目录中中的`widgets`子目录中直接新增插件的方式完成，仿照October默认的modules/backend中表单插件的结构即可：
+如果不想通过内置工具生成表单部件，同样也可以直接在对应plugin的目录中中的`widgets`子目录中直接新增插件的方式完成，仿照October默认的modules/backend中表单插件的结构即可：
 
 ```
 → tree widgets
@@ -248,9 +248,9 @@ widgets
 
 #### init()
 
-`init()`方法顾名思义，即初始化表单组件，一些组件自身需要进行的变量定义，参数定义等操作可以在这里编写。
+`init()`方法顾名思义，即初始化表单部件，一些组件自身需要进行的变量定义，参数定义等操作可以在这里编写。
 
-在使用过程中，每个表单组件都或多或少有一些自定义的参数，譬如富文本编辑器的大小等，这些参数通过yaml文件配置，但是如何才能在表单组件中的读取到呢？
+在使用过程中，每个表单部件都或多或少有一些自定义的参数，譬如富文本编辑器的大小等，这些参数通过yaml文件配置，但是如何才能在表单部件中的读取到呢？
 
 可以在`init()`中调用`fillFromConfig()`这一成员方法，通过数组的形式，将参数名传入，之后将会出现同名的成员变量，其值就是传入的参数名称。如果没有设定，那么也可以指定默认值。
 
@@ -263,7 +263,7 @@ widgets
 + `whereClause` `查询数据时的WHERE子句内容`
 + `recordsPerPage` `弹出列表页每页显示个数`
 
-在实际使用中，在`models/yourmodel/`下的`fields.yaml`文件中指定使用这一表单组件时，可以通过指定这些参数的形式，影响展现以及效果，形如：
+在实际使用中，在`models/yourmodel/`下的`fields.yaml`文件中指定使用这一表单部件时，可以通过指定这些参数的形式，影响展现以及效果，形如：
 
 ```
 related_samples:
@@ -291,7 +291,7 @@ related_samples:
 
 那么问题来了，如何才能设定正确的name属性呢？
 
-OctoberCMS框架在实现表单组件时，会根据表单组件所对应的Model和列的名称，生成key的名字，即input标签的name属性，可以通过成员变量`formField`的方法`getName()`获取。
+OctoberCMS框架在实现表单部件时，会根据表单部件所对应的Model和列的名称，生成key的名字，即input标签的name属性，可以通过成员变量`formField`的方法`getName()`获取。
 
 在主逻辑文件`RelatedRecords.php`的`render()`（或者其他被这一方法调用的方法之中），为name属性赋值：
 
@@ -418,7 +418,7 @@ class Sample extends Controller
 
 其他如前端的操作、样式的编写等等不在赘述。
 
-### 注册表单组件
+### 注册表单部件
 
 完成上述工作之后，还需要关键的一步，即在`Plugin.php`中的`registerFormWidgets()`方法注册编写完成的组件。
 
