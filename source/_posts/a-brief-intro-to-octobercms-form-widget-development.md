@@ -420,7 +420,7 @@ class Sample extends Controller
 
 ### 注册表单部件
 
-完成上述工作之后，还需要关键的一步，即在`Plugin.php`中的`registerFormWidgets()`方法注册编写完成的组件。
+完成上述工作之后，还需要关键的一步，即在`Plugin.php`中的`registerFormWidgets()`方法注册编写完成的部件。
 
 ```
 public function registerFormWidgets()
