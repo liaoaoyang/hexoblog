@@ -98,4 +98,26 @@ file_put_contents(OUTPUT_PATH . '/StatusCode.java', sprintf($androidTpl, date('Y
 
 转换后可以获得 `StatusCode.h` 与 `StatusCode.java` 两个文件。
 
+# 通过反射调用构造方法
+
+一般的，我们可以通过call_user_func之类的内置方法调用一个对象的方法，然而，如果有相同基类的一系列类，并且构造方法参数列表不相同，需要根据特定情况调用构造方法构造对象并执行方法可以怎么办？是可以写成多个if/else的。
+
+也可以使用反射机制，通过反射类的newInstanceArgs方法，传入构造参数数组。
+
+```
+$subTasks = [
+    'ClassA' => ['foo', 'bar'],
+    'ClassB' => ['foo', 'bar', 1],
+];
+
+foreach ($subTasks as $className => $params) {
+	$ref = new ReflectionClass($className);
+	$model = $ref->newInstanceArgs($params);
+	$model->run(); // run是一个公共方法
+
+}
+```
+
 以上。
+
+
