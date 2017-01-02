@@ -1,4 +1,4 @@
-title: 简要了解 MySql 5.5/5.6/5.7/8 出现的新特性
+title: 简要了解 MySQL 5.5/5.6/5.7/8 出现的新特性
 date: 2016-09-18 23:58:14
 tags: [MySQL]
 categories: 系统
