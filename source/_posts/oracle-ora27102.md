@@ -43,6 +43,6 @@ cat /u01/app/oracle/product/11R2/dbs/spfileorcl.ora
 分析得知php-fpm当前占用了很多的内存，首先可以先停止php-fpm，之后完成减少Oracle进程数的操作。
 
 
-[1]: http://blog.wislay.com/wp-content/uploads/2014/11/ora27102.png
+[1]: https://blog.wislay.com/wp-content/uploads/2014/11/ora27102.png
 [2]: http://www.liaoaoyang.com/articles/2014/11/09/ci-may-not-use-pconnect-with-oracle.html
-[3]: http://blog.wislay.com/wp-content/uploads/2014/11/no-enough-mem.png
+[3]: https://blog.wislay.com/wp-content/uploads/2014/11/no-enough-mem.png

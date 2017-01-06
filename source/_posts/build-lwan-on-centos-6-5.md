@@ -71,4 +71,4 @@ GCC准备好了之后自然就要开始编译，编译时原本出现了一些�
 [5]: http://www.mpfr.org/mpfr-current/#download
 [6]: http://www.multiprecision.org/index.php?prog=mpc&page=download
 [7]: https://github.com/lpereira/lwan/issues/75
-[8]: http://blog.wislay.com/wp-content/uploads/2014/12/lwan_succ.jpg
+[8]: https://blog.wislay.com/wp-content/uploads/2014/12/lwan_succ.jpg

@@ -107,9 +107,9 @@ bind -n M-r source-file ~/.tmux.conf \; display "Configuration Reloaded!"
 
 键盘上的两个option/alt键只需使用一个即可。
 
-[1]: http://blog.wislay.com/wp-content/uploads/2016/02/tmux-multi-pane-effect.png
+[1]: https://blog.wislay.com/wp-content/uploads/2016/02/tmux-multi-pane-effect.png
 
-[2]: http://blog.wislay.com/wp-content/uploads/2016/02/tmux-iterm2-config.png
+[2]: https://blog.wislay.com/wp-content/uploads/2016/02/tmux-iterm2-config.png
 
 
 
