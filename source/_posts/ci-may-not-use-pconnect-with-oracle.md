@@ -87,6 +87,6 @@ CI在使用持久连接时，可能需要考虑Oracle的可用进程数（设为
 
 [1]: http://codeigniter.org.cn/user_guide/database/configuration.html
 [2]: http://php.net/manual/zh/function.oci-pconnect.php
-[3]: http://blog.wislay.com/wp-content/uploads/2014/11/oci_pconnect.jpg
-[4]: http://blog.wislay.com/wp-content/uploads/2014/11/max-proc-exceeded.png
+[3]: https://blog.wislay.com/wp-content/uploads/2014/11/oci_pconnect.jpg
+[4]: https://blog.wislay.com/wp-content/uploads/2014/11/max-proc-exceeded.png
 [5]: http://nimishgarg.blogspot.com/2012/05/ora-00020-maximum-number-of-processes.html

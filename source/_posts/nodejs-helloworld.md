@@ -102,7 +102,7 @@ register方法根据参数1，将回调方法绑定到指定的节点上，例�
 
 
 
-[1]: http://blog.wislay.com/wp-content/uploads/2014/09/node_hello_world_struct.png
+[1]: https://blog.wislay.com/wp-content/uploads/2014/09/node_hello_world_struct.png
 [2]: http://nqdeng.github.io/7-days-nodejs
 [3]: http://expressjs.com
 [4]: http://requirejs.org

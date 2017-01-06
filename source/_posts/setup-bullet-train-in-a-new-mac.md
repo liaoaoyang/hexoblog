@@ -100,9 +100,9 @@ BULLETTRAIN_GIT_UNTRACKED=" %F{208}✭"
 [1]: https://github.com/Lokaltog/powerline-fonts
 [2]: https://github.com/VundleVim/Vundle.vim
 [3]: https://coderwall.com/p/yiot4q/setup-vim-powerline-and-iterm2-on-mac-os-x
-[4]: http://blog.wislay.com/wp-content/uploads/2015/12/oh-my-zsh-with-bullet-train-iterm2.png
-[5]: http://blog.wislay.com/wp-content/uploads/2015/12/oh-my-zsh-with-bullet-train-vim.png
-[6]: http://blog.wislay.com/wp-content/uploads/2015/12/oh-my-zsh-with-bullet-train-default.png
+[4]: https://blog.wislay.com/wp-content/uploads/2015/12/oh-my-zsh-with-bullet-train-iterm2.png
+[5]: https://blog.wislay.com/wp-content/uploads/2015/12/oh-my-zsh-with-bullet-train-vim.png
+[6]: https://blog.wislay.com/wp-content/uploads/2015/12/oh-my-zsh-with-bullet-train-default.png
 [7]: https://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
-[8]: http://blog.wislay.com/wp-content/uploads/2015/12/Xterm_256color_chart.png
-[9]: http://blog.wislay.com/wp-content/uploads/2015/12/oh-my-zsh-with-bullet-train-sample.png
+[8]: https://blog.wislay.com/wp-content/uploads/2015/12/Xterm_256color_chart.png
+[9]: https://blog.wislay.com/wp-content/uploads/2015/12/oh-my-zsh-with-bullet-train-sample.png
