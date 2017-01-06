@@ -4,7 +4,7 @@ tags: [Horowitz, Startup, Career]
 categories: Reading
 ---
 
-![The.Hard.Thing.About.Hard.Things](http://blog.wislay.com/wp-content/uploads/2016/10/The.Hard_.Thing_.About_.Hard_.Things.jpg)
+![The.Hard.Thing.About.Hard.Things](https://blog.wislay.com/wp-content/uploads/2016/10/The.Hard_.Thing_.About_.Hard_.Things.jpg)
 
 # 概述
 

@@ -14,7 +14,7 @@ categories: 系统
 
 另外`PHP4Nagios`虽然已经能满足显示上的需求，但是绘图效果比较古老（图片来自网络，侵删）：
 
-![PNP4Nagios sample](http://blog.wislay.com/wp-content/uploads/2016/08/php4nagios-sample.png)
+![PNP4Nagios sample](https://blog.wislay.com/wp-content/uploads/2016/08/php4nagios-sample.png)
 
 并且不能对某些数据进行对比（比如多台机器的负载情况在同一个图表中显示）。
 
@@ -36,7 +36,7 @@ Nagios只能看到“现在”的数据，无法回顾历史以及查看趋势�
 
 相比之下，Grafana带有权限控制，能支持相当多的时序数据库，从graphite、opentsdb、influxdb，当然也有ES。多条曲线同时展示时还可以看到具体数值，显示效果也相当不错。
 
-![Grafana sample from it's website](http://blog.wislay.com/wp-content/uploads/2016/08/grafana-sample-small.jpg)
+![Grafana sample from it's website](https://blog.wislay.com/wp-content/uploads/2016/08/grafana-sample-small.jpg)
 
 并且，Grafana在4.0后将会具有告警功能，玩法会变得更多。
 
@@ -135,11 +135,11 @@ graphios在Nagios官网上声称匹配`3.x`版本的Nagios，但是在与实际�
 
 ### load
 
-![load](http://blog.wislay.com/wp-content/uploads/2016/08/nagios-load-data-in-grafana.jpg)
+![load](https://blog.wislay.com/wp-content/uploads/2016/08/nagios-load-data-in-grafana.jpg)
 
 ### CPU
 
-![CPU](http://blog.wislay.com/wp-content/uploads/2016/08/nagios-cpu-data-in-grafana.jpg)
+![CPU](https://blog.wislay.com/wp-content/uploads/2016/08/nagios-cpu-data-in-grafana.jpg)
 
 # 小结
 
