@@ -81,7 +81,7 @@ ssh -p port username@router_ip
 [1]: http://mirror.bit.edu.cn/centos/6.5/isos/x86_64/
 [2]: http://wiki.centos.org/zh/HowTos/InstallFromUSBkey
 [3]: https://chrome.google.com/webstore/detail/vnc%C2%AE-viewer-for-google-ch/iabmpiboiopbgfabjmgeedhcmjenhbla
-[4]: http://blog.wislay.com/wp-content/uploads/2014/10/vncviewer-1024x796.png
-[5]: http://blog.wislay.com/wp-content/uploads/2014/10/vncviewer_connected-1024x796.png
+[4]: https://blog.wislay.com/wp-content/uploads/2014/10/vncviewer-1024x796.png
+[5]: https://blog.wislay.com/wp-content/uploads/2014/10/vncviewer_connected-1024x796.png
 [6]: https://launchpad.net/libmemcached/1.0/1.0.16/+download/libmemcached-1.0.16.tar.gz
-[7]: http://blog.wislay.com/wp-content/uploads/2014/10/set_port_dispatch-1024x584.png
+[7]: https://blog.wislay.com/wp-content/uploads/2014/10/set_port_dispatch-1024x584.png

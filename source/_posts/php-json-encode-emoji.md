@@ -92,4 +92,4 @@ ulen = json_utf8_to_utf16(utf16, s, len);
 [3]: https://dev.mysql.com/doc/refman/5.5/en/charset-unicode-utf8mb4.html
 [4]: http://dev.mysql.com/doc/refman/5.6/en/charset-unicode-utf8.html
 [5]: http://stackoverflow.com/questions/3220031/how-to-filter-or-replace-unicode-characters-that-would-take-more-than-3-bytes
-[6]: http://blog.wislay.com/wp-content/uploads/2015/08/emoji_json_encode_test.png
+[6]: https://blog.wislay.com/wp-content/uploads/2015/08/emoji_json_encode_test.png
