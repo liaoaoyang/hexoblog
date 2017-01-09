@@ -54,5 +54,174 @@ PHP里的数组就提供了Hash的功能，PHP数组的便利程度无需多言�
 
 速度上我们可能不再担忧了，但是内存占用上呢？
 
+目前PHP的最新版本为`PHP 7.1.0`，常规编译安装后，通过如下脚本获取0~1000000在数组中的内存占用情况：
+
+```
+<?php
+	ini_set('memory_limit', '512M');
+
+	$repeat = isset($argv[1]) ? $argv[1] : 0;
+
+	echo 'memory usage(B):' . memory_get_usage() . "\n";
+	$a = [];
+
+	for($i = 0; $i < $repeat; $i++) {
+		$a[sprintf("%07d", $i)] = '1';
+	}
+
+	echo 'memory usage(B):' . memory_get_usage() . "\n";
+```
+
+运行结果为：
+
+```
+$ /usr/local/php7/7.1.0/bin/php array_mem_usage.php 1000000
+memory usage(B):350688
+memory usage(B):358099536
+```
+
+仅仅1000000的7位字符串作为hash key的数据集，就需要耗费超过**341MB**的内存。可是即便是作为文本文件，这些数据集在通过换行符号分隔的情况下，完全加载到内存只需要大约**8MB**的内存使用。是什么造成了如此大的差距呢？
+
+从PHP的源码来看(源码目录下的`Zend/zend_types.h`)，PHP数组通过`HashTable`这一个struct实现：
+
+```
+typedef struct _zend_array HashTable;
+
+struct _zend_array {
+    zend_refcounted_h gc;
+    union {
+        struct {
+            ZEND_ENDIAN_LOHI_4(
+                zend_uchar    flags,
+                zend_uchar    nApplyCount,
+                zend_uchar    nIteratorsCount,
+                zend_uchar    consistency)
+        } v;
+        uint32_t flags;
+    } u;
+    uint32_t          nTableMask;
+    Bucket           *arData;
+    uint32_t          nNumUsed;
+    uint32_t          nNumOfElements;
+    uint32_t          nTableSize;
+    uint32_t          nInternalPointer;
+    zend_long         nNextFreeElement;
+    dtor_func_t       pDestructor;
+};
+```
+
+数据的实际存储部分即`Bucket`，对内存占用影响起到决定性作用的也正是`Bucket`这个数据结构，Bucket的定义为：
+
+```
+typedef struct _Bucket {
+    zval              val;
+    zend_ulong        h;                /* hash value (or numeric index)   */
+    zend_string      *key;              /* string key or NULL for numerics */
+} Bucket;
+```
+
+在`Bucket`中包含`zval`，`zend_ulong`，以及`zend_string`三种数据结构，下面分别来看看这几个数据结构。
+
+### zval
+
+`zval`的定义如下：
+
+```
+typedef struct _zval_struct     zval;
+
+struct _zval_struct {
+    zend_value        value;            /* value */
+    union {
+        struct {
+            ZEND_ENDIAN_LOHI_4(
+                zend_uchar    type,         /* active type */
+                zend_uchar    type_flags,
+                zend_uchar    const_flags,
+                zend_uchar    reserved)     /* call info for EX(This) */
+        } v;
+        uint32_t type_info;
+    } u1;
+    union {
+        uint32_t     next;                 /* hash collision chain */
+        uint32_t     cache_slot;           /* literal cache slot */
+        uint32_t     lineno;               /* line number (for ast nodes) */
+        uint32_t     num_args;             /* arguments number for EX(This) */
+        uint32_t     fe_pos;               /* foreach position */
+        uint32_t     fe_iter_idx;          /* foreach iterator index */
+        uint32_t     access_flags;         /* class constant access flags */
+        uint32_t     property_guard;       /* single property guard */
+    } u2;
+};
+```
+
+`zval`中又包含`zend_vlaue`，那么通过`zend_value`的定义：
+
+```
+typedef union _zend_value {
+    zend_long         lval;             /* long value */
+    double            dval;             /* double value */
+    zend_refcounted  *counted;
+    zend_string      *str;
+    zend_array       *arr;
+    zend_object      *obj;
+    zend_resource    *res;
+    zend_reference   *ref;
+    zend_ast_ref     *ast;
+    zval             *zv;
+    void             *ptr;
+    zend_class_entry *ce;
+    zend_function    *func;
+    struct {
+        uint32_t w1;
+        uint32_t w2;
+    } ww;
+} zend_value;
+```
+
+可以看出`zend_value`作为一个union至少要占用8个字节（最大的内存占用来自于当中包含的`zend_long`，在`Zend/zend_long.h`中被定义为`typedef int64_t zend_long;`），所以，作为一个struct，`zval`会占用sizeof(value)+sizeof(u1)+sizeof(u2)=8+4+4=16 Bytes。
+
+### zend_ulong
+
+在`Zend/zend_long.h`中被定义为`typedef int64_t zend_ulong;`，所以会占用8 Bytes。
+
+### zend_string
+
+来看`zend_string`的定义：
+
+```
+struct _zend_string {
+    zend_refcounted_h gc;
+    zend_ulong        h;                /* hash value */
+    size_t            len;
+    char              val[1];
+};
+```
+
+其中`zend_refcounted_h`的定义为：
+
+```
+typedef struct _zend_refcounted_h {
+    uint32_t         refcount;          /* reference counter 32-bit */
+    union {
+        struct {
+            ZEND_ENDIAN_LOHI_3(
+                zend_uchar    type,
+                zend_uchar    flags,    /* used for strings & objects */
+                uint16_t      gc_info)  /* keeps GC root number (or 0) and color */
+        } v;
+        uint32_t type_info;
+    } u;
+} zend_refcounted_h;
+```
+
+可以看到`zend_refcounted_h`的空间占用为sizeof(refcount)+sizeof(u)=4+4=8 Bytes。
+
+`size_t`这里需要注意，因为在64位OS上编译，这里会占用8 Bytes。
+
+结构成员val用于存储key的值，由于key都是7位长的字符串，所以这里会占用7 Bytes。
+
+所以，在这里，空间占用为8+8+8+7=31 Bytes。
+
+综上，直接统计数据结构的大小已经能明显看到PHP提供Hash是相当占用内存的，出于这个方面的考虑，基本可以认定Hash不适合当前的应用场景。
 
 
