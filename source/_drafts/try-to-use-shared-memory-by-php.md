@@ -234,8 +234,55 @@ typedef struct _zend_refcounted_h {
 
 数组的“缺点”在于查找的耗时。线性查找的耗时几乎让人无法接受，那么如果数据可以是有序的，通过二分查找耗时将会大大降低。
 
-## Bitmap/Hash/Array应该选择哪种数据结构
+## Bitmap/Hash/Array?
 
 从数据特点和存储用量来考虑，同时考虑到查询速度，Array在这个场景下胜出。
+
+## 存储
+
+PHP可以使用共享内存，作为最简单的IPC方式，并且使用方式相当简单，PHP的`shmop`扩展中提供了对共享内存的操作能力。
+
+PHP的共享内存的创建实际上是通过`shmget`这一系统调用实现的，参见`shmop`扩展源码：
+
+```
+PHP_FUNCTION(shmop_open)
+{
+	zend_long key, mode, size;
+	struct php_shmop *shmop;
+	struct shmid_ds shm;
+	char *flags;
+	size_t flags_len;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsll", &key, &flags, &flags_len, &mode, &size) == FAILURE) {
+		return;
+	}
+
+// 其他代码
+
+	if (shmop->shmflg & IPC_CREAT && shmop->size < 1) {
+		php_error_docref(NULL, E_WARNING, "Shared memory segment size must be greater than zero");
+		goto err;
+	}
+
+	shmop->shmid = shmget(shmop->key, shmop->size, shmop->shmflg); // 创建共享内存
+	if (shmop->shmid == -1) {
+		php_error_docref(NULL, E_WARNING, "unable to attach or create shared memory segment '%s'", strerror(errno));
+		goto err;
+	}
+
+// 其他代码
+
+	RETURN_RES(zend_register_resource(shmop, shm_type));
+err:
+	efree(shmop);
+	RETURN_FALSE;
+}
+```
+
+`shmget`返回的值是一个类似文件描述符的存在，因为它并不是一个真正的文件描述符，所以我们实际上的操作依据仅仅上是一个全局唯一的数字，用来表示共享内存。
+
+# 参考
+
++ [Linux进程间通信-共享内存](http://liwei.life/2016/08/08/share_memory/)
 
 
