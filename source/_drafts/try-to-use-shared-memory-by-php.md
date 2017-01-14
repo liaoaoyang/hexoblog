@@ -234,6 +234,8 @@ typedef struct _zend_refcounted_h {
 
 数组的“缺点”在于查找的耗时。线性查找的耗时几乎让人无法接受，那么如果数据可以是有序的，通过二分查找耗时将会大大降低。
 
+1M的数据，只需要通过至多10次查找即可判断对应的值是否存在。
+
 ## Bitmap/Hash/Array?
 
 从数据特点和存储用量来考虑，同时考虑到查询速度，Array在这个场景下胜出。
@@ -241,6 +243,14 @@ typedef struct _zend_refcounted_h {
 ## 存储
 
 PHP可以使用共享内存，作为最简单的IPC方式，并且使用方式相当简单，PHP的`shmop`扩展中提供了对共享内存的操作能力。
+
+### 创建/打开
+
+共享内存在PHP的创建和打开工作是通过`shmop_open`方法实现的。定义如下：
+
+```
+int shmop_open ( int $key , string $flags , int $mode , int $size )
+```
 
 PHP的共享内存的创建实际上是通过`shmget`这一系统调用实现的，参见`shmop`扩展源码：
 
@@ -272,6 +282,12 @@ PHP_FUNCTION(shmop_open)
 
 // 其他代码
 
+	shmop->addr = shmat(shmop->shmid, 0, shmop->shmatflg); // 申请or打开的共享内存映射到当前进程的虚拟内存空间
+	if (shmop->addr == (char*) -1) {
+		php_error_docref(NULL, E_WARNING, "unable to attach to shared memory segment '%s'", strerror(errno));
+		goto err;
+	}
+
 	RETURN_RES(zend_register_resource(shmop, shm_type));
 err:
 	efree(shmop);
@@ -279,10 +295,129 @@ err:
 }
 ```
 
-`shmget`返回的值是一个类似文件描述符的存在，因为它并不是一个真正的文件描述符，所以我们实际上的操作依据仅仅上是一个全局唯一的数字，用来表示共享内存。
+`shmget`返回的值是一个类似文件描述符的存在，因为它并不是一个真正的文件描述符，所以我们实际上的操作依据仅仅上是一个全局唯一的数字，用来表示共享内存。同时通过`shmat`系统调用将共享内存映射到当前进程的地址虚拟空间之中。
+
+共享内存打开方法中的第一个参数指定的key，是标识这一共享内存片段的依据，需要全局唯一，一个方法就是通过一个确实存在的文件，利用`ftok`系统调用，生成一个全局唯一的key。文件名不是决定key值的决定因素，决定因素是文件的inode号。
+
+### 关闭
+
+```
+void shmop_close ( resource $shmid )
+```
+
+关闭的实现的是通过`shmdt`系统调用完成的。在扩展的`MINIT`阶段，通过`zend_register_list_destructors_ex`方法注册了资源析构方法为`rsclean`，对共享内存的的ID看做是资源（Resource）。
+
+```
+PHP_MINIT_FUNCTION(shmop)
+{
+	shm_type = zend_register_list_destructors_ex(rsclean, NULL, "shmop", module_number);
+
+	return SUCCESS;
+}
+```
+
+在调用这一方法时，通过资源删除API`zend_list_close`调用注册的`rsclean`方法完成对资源的释放。
+
+```
+PHP_FUNCTION(shmop_close)
+{
+	zval *shmid;
+	struct php_shmop *shmop;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &shmid) == FAILURE) {
+		return;
+	}
+
+
+	if ((shmop = (struct php_shmop *)zend_fetch_resource(Z_RES_P(shmid), "shmop", shm_type)) == NULL) {
+		RETURN_FALSE;
+	}
+
+	zend_list_close(Z_RES_P(shmid));
+}
+```
+
+而`rsclean`的实现如下：
+
+```
+static void rsclean(zend_resource *rsrc)
+{
+	struct php_shmop *shmop = (struct php_shmop *)rsrc->ptr;
+
+	shmdt(shmop->addr);
+	efree(shmop);
+}
+```
+
+对共享内存ID进行了`shmdt`操作，同时释放了的申请共享内存操作结构体。
+
+### 删除
+
+```
+bool shmop_delete ( resource $shmid )
+```
+
+这一个方法中，是`shmctl`系统调用的表现的时候了。删除一段共享内存只需要将系统调用中的第二个参数设定为`IPC_RMID`即可。
+
+```
+PHP_FUNCTION(shmop_delete)
+{
+	zval *shmid;
+	struct php_shmop *shmop;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &shmid) == FAILURE) {
+		return;
+	}
+
+	if ((shmop = (struct php_shmop *)zend_fetch_resource(Z_RES_P(shmid), "shmop", shm_type)) == NULL) {
+		RETURN_FALSE;
+	}
+
+	if (shmctl(shmop->shmid, IPC_RMID, NULL)) {
+		php_error_docref(NULL, E_WARNING, "can't mark segment for deletion (are you the owner?)");
+		RETURN_FALSE;
+	}
+
+	RETURN_TRUE;
+}
+```
+
+当然，删除共享内存也可以通过Linux中的ipcrm命令完成，如`ipcrm`的man中提到的，如果知到key（即`创建/打开`部分提到的共享内存全局唯一的标识）则使用`-M`参数，知道ID则使用`-m`参数。
+
+```
+     -M shmkey
+             Mark the shared memory segment associated with key shmkey for removal.  This marked segment will be destroyed after the last detach.
+
+     -m shmid
+             Mark the shared memory segment associated with id shmid for removal.  This marked segment will be destroyed after the last detach.
+```
+
+### 读
+
+```
+string shmop_read ( resource $shmid , int $start , int $count )
+```
+
+读取的方法则是通过共享内存ID以及开始位置以及读取的长度获得一个字符串。
+
+从实现上来看，以下几种情况会返回false并打印WARNING日志：
+
++ 起始值小于0或者大于共享内存的容量
++ 读取的字节数小于0
++ 起始值大于INT_MAX与读取字节数只差
++ 起始值与读取字节数之和大于共享内存大小
+
+### 写
+
+```
+int shmop_write ( resource $shmid , string $data , int $offset )
+```
+
+实现上来说，实际上是通过`memcpy`将字符串的值复制到共享内存的指定位置。
 
 # 参考
 
 + [Linux进程间通信-共享内存](http://liwei.life/2016/08/08/share_memory/)
++ [PHP7 使用资源包裹第三方扩展的实现及其源码解读](https://mengkang.net/684.html)
 
 
