@@ -24,7 +24,7 @@ Context:	server, location
 
 **注：**
 
-源代码中通过`ngx_http_parse_complex_uri`函数完成上述这些功能的。
+源代码中通过`ngx_http_parse_complex_uri()`函数完成上述这些功能的。
 
 这一函数主要是针对请求uri做分析，逻辑上是如下枚举的状态数值的迁移：
 
@@ -62,5 +62,9 @@ if (usual[ch >> 5] & (1U << (ch & 0x1f))) {
 + `sw_dot_dot`处理连续的`.`的情况，如果遇到`/`，则认为是上层目录，会进行目录的回退工作，例如uri为`http://a.net/b/c/../`，在`sw_dot_dot`状态的处理过程中，会将u回退5个位置，即从最后一个`/`回退到`c`字符处，此时uri可以看做是`http://a.net/b/c`，之后继续回退，直到遇到上一个`/`字符为止，经过上述这些处理，最后uri变为`http://a.net/b/`；
 + `sw_quoted`处理形如`%XX`表示的数据；
 + `sw_quoted_second`则处理形如`%XX`表示的数据中的第二个X部分的数据；
+
+> A location can either be defined by a prefix string, or by a regular expression. Regular expressions are specified with the preceding “~*” modifier (for case-insensitive matching), or the “~” modifier (for case-sensitive matching). To find location matching a given request, nginx first checks locations defined using the prefix strings (prefix locations). Among them, the location with the longest matching prefix is selected and remembered. Then regular expressions are checked, in the order of their appearance in the configuration file. The search of regular expressions terminates on the first match, and the corresponding configuration is used. If no match with a regular expression is found then the configuration of the prefix location remembered earlier is used.
+
+一个location配置要么被定义为uri的前缀字符串，要么通过正则表达式表示。正则表达式之前的符号可以是`~*`（大小写无关的情况），或者`~`（大小写敏感的情况）。为了找到请求匹配的location设置，Nginx首先通过前缀匹配的方式，查找location设置。对于各个location配置，拥有最长匹配长度的location配置将会胜出，并临时记录下来。（如果条件允许的话）之后会接着检查配置文件中正则表达式表示的location配置。正则表达式比较一旦匹配成功，将会结束正则表达式阶段的匹配查找，匹配的正则表达式表示的location配置将会胜出。如果没有正则表达式配置完成了匹配，那么之前被记录的前缀字符串的匹配结果的配置项将会被采用。
 
 
