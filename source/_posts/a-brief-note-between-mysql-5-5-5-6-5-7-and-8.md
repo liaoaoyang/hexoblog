@@ -230,7 +230,7 @@ JSON中的字符串在MySQL中会被转化成`utf8mb4`的字符集，给携带�
 
 #### 用户角色
 
-8.0中将会增强账号管理的功能，提供`角色`这一概念，即能组合权限，批量授权给某一用户。
+8.0中将会增强账号管理的功能，提供`角色`这一概念，即能组合权限，批量授权给某一用户。使用步骤可以参见[博文](https://yq.aliyun.com/articles/60654)或[官方文档](http://dev.mysql.com/doc/refman/8.0/en/roles.html)。
 
 #### 增强的InnoDB
 
@@ -249,6 +249,7 @@ JSON中的字符串在MySQL中会被转化成`utf8mb4`的字符集，给携带�
 \[1]: [What’s New in MySQL 5.7? (So Far)](http://mysqlserverteam.com/whats-new-in-mysql-5-7-so-far/)
 
 \[2]: [MySQL 5.7版本新特性连载（一）](http://imysql.com/2015/06/23/mysql-57-new-feature-part-1.shtml)
+
 
 
 
