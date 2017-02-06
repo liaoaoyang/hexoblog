@@ -166,7 +166,7 @@ mathjax:
 #baidu_analytics:
 
 # Duoshuo ShortName
-#duoshuo_shortname:
+duoshuo_shortname: wislay
 
 # Disqus
 #disqus_shortname:
@@ -183,7 +183,7 @@ mathjax:
 
 
 # Google Analytics
-google_analytics: UA-74385074-1
+google_analytics: UA-74385074-2
 
 
 # Make duoshuo show UA
@@ -192,8 +192,8 @@ google_analytics: UA-74385074-1
 duoshuo_info:
   ua_enable: true
   admin_enable: false
-  user_id: 0
-  #admin_nickname: ROOT
+  user_id: 8875784
+  admin_nickname: Wislay
 
 
 # Facebook SDK Support.
