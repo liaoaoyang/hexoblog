@@ -14,7 +14,7 @@ tags: Hexo
 
 ## 准备字体
 
-首先，通过Chrome开发者工具，会发现难以加载的根源是这一css文件以及相关联的字体：
+首先，通过Chrome开发者工具，会发现难以加载的是这一css文件以及相关联的字体：
 
 ```
 https://fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext
