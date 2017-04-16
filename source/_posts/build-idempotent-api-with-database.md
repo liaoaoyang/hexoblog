@@ -113,7 +113,7 @@ ELSE
 	# 数据库唯一键保证同时到达的多个新请求只有一个可以进行转账操作
 	result = INSERT (op_no=op_no_A, status='CREATE') INTO idempotent_op
 
-	IF result = FAIL THEN
+	IF result == FAIL THEN
 		ROLLBACK
 		RETURN 'TRANSFER INSERT RECORD FAILED'
 
