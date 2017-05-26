@@ -6,21 +6,33 @@ categories: Life
 
 关西之行的最后一站，喝到了期待已久的Yamazaki 25 Years Old。
 
+在尝试了山崎，白州，竹鹤，余市，宫城峡，响常见年份的日威之后，趁着本次来到关西，起了个早，来到了山崎威士忌的产地——山崎蒸馏所。
+
+山崎蒸馏所位于大阪府三岛郡岛本町山崎，实际上这个位置离京都更近。从大阪出发，乘坐`京都本线`到`大山崎`站下车，沿着指示牌大约前行10-15分钟，就能到达蒸馏所前的道口。到达`高槻市`时，会有一个同站台换乘。
+
 ![Yamazaki01](https://blog.wislay.com/wp-content/uploads/2017/05/IMG_2421.jpg)
+
+访问山崎蒸馏所需要在网站上进行预约。预约分三类，2000円和1000円的见学，可以参观工厂和试饮。然而付费参观早就被预约一空，行程不能改变的我只能预约免费的博物馆游览项目。日文预约填写需要填写日本国内电话，而[英文网上预约](http://www.suntory.com/factory/yamazaki/inspection/)则可以填写国际电话，不会日语的话可以考虑使用英文网上预约。
+
+到蒸馏所大门的接待处，报上姓名之后接待员会发给一个访客牌，这个访客牌游览完毕需要归还到接待处，如果忘记可能就需要通过日本国内快递邮寄回到蒸馏所了……山崎蒸馏所的红色车间相当显眼。
 
 ![Yamazaki02](https://blog.wislay.com/wp-content/uploads/2017/05/IMG_2422.jpg)
 
+山崎威士忌博物馆一楼有各种年份和制作阶段的酒作为展品，从蒸馏到熟成的各个阶段，走过酒柜，能感觉到时间的流转。
+
 ![Yamazaki03](https://blog.wislay.com/wp-content/uploads/2017/05/IMG_2424.jpg)
+
+二楼介绍了山崎获得的各个奖项以及一些历史，同样的也有各个年份的山崎/白州/响酒品的展出，雪莉桶是这次游览的主要目的。
 
 ![Yamazaki04](https://blog.wislay.com/wp-content/uploads/2017/05/IMG_2423.jpg)
 
+然而遗憾的是，纪念品商店并没有12年甚至更高年份的山崎/白州出售，工作人员的说法是今天的卖完了。纪念品商店出售的只有各类酒具，无年份的纪念品版本Single Malt和白橡木桶小装酒，还有三得利推出的知多威士忌。
+
 ![Yamazaki05](https://blog.wislay.com/wp-content/uploads/2017/05/IMG_2425.jpg)
+
+有一些失望，只能到试饮的柜台和期待已久的25年雪莉桶相会了。
 
 ![Yamazaki06](https://blog.wislay.com/wp-content/uploads/2017/05/IMG_2354.jpg)
 
-![Yamazaki07](https://blog.wislay.com/wp-content/uploads/2017/05/IMG_2388.jpg)
-
-![Yamazaki08](https://blog.wislay.com/wp-content/uploads/2017/05/IMG_2420.jpg)
-
-
+红色的酒液入口的一瞬，感觉自己遇到了能记住一辈子的那份感动。
 
