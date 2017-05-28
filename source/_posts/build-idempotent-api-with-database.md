@@ -125,5 +125,20 @@ ELSE
 		RETURN 'TRANSFER FAILED'
 ```
 
+以上针对于只有一个业务方/使用者的场景，如果有多个业务方的情况下，只需要在幂等操作表中增加一个来源字段（如名为`source`），并对`source`字段与`op_no`做联合的唯一索引即可。
+
+```
+CREATE TABLE `idempotent_op` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `source` int(11) NOT NULL DEFAULT 0,
+  `op_no` char(32) NOT NULL DEFAULT '',
+  `status` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `op_no` (`source`, `op_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+事实上，在所有操作都带有前置状态的情况下（即所有改动都显示的指明上一个状态），如果接口操作只有一步，而没有多个步骤需要同时成功失败的情况下，甚至不需要显式的开启事务。
+
 以上。
 
