@@ -4,7 +4,9 @@ tags:
 categories: Life
 ---
 
-夏初的京都。
+夏初的京都，现代感和历史感并存。
+
+<!-- more -->
 
 ![KYOTO201701](https://blog.wislay.com/wp-content/uploads/2017/05/IMG_6498.jpg)
 
