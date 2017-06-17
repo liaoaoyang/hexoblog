@@ -54,10 +54,10 @@ PHP5/7加上7.19的libcurl，设置低于1s的超时时间时，`curl_exec`仍�
    echo "end:     {$end}\n";
    echo "used:    " . ($end - $start) * 1000  . "ms\n";
 ```
-通过如下命令，设定了200ms的超时时间，同时还有1s的接口延迟响应时间。
+通过如下命令，设定了200ms的超时时间，同时还有2s的接口延迟响应时间。
 
 ```
-[root@vm curl_test]# php curl_test.php 200 1
+[root@vm curl_test]# php curl_test.php 200 2
 ```
 
 预料中，客户端应该会在200ms左右的时间结束程序，然而实际执行输出让人感到困惑：
