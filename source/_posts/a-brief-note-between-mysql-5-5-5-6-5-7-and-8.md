@@ -14,6 +14,8 @@ categories: 系统
 
 如有错误，烦请指出。
 
+<!-- more -->
+
 # MySQL的开发周期
 
 在比较之前，首先提一下[MySQL的开发周期](https://dev.mysql.com/doc/mysql-development-cycle/en/preface.html).
