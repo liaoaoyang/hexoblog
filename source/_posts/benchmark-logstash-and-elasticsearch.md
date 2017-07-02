@@ -8,6 +8,14 @@ tags: [Logstash, Elasticsearch]
 
 组内的日志系统基于ELK搭建，本文中的数据在生产环境中进行测试得到，仅供参考。
 
+可供参考的数据为：
+
+*Logstash* 分析速度为：**2352.94** lines/s
+
+`ES集群`写入速度为：**9345.79** records/s
+
+<!-- more -->
+
 # 系统构成
 
 系统可以简要的分为：
@@ -93,3 +101,5 @@ output {
 *Logstash* 分析速度为：**2352.94** lines/s
 
 `ES集群`写入速度为：**9345.79** records/s
+
+
