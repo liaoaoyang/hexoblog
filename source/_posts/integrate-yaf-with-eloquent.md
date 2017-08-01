@@ -8,6 +8,8 @@ categories: PHP
 
 在Yaf中集成Eloquent ORM需要通过Composer管理相关依赖，并完成Eloquent的初始化。
 
+<!-- more -->
+
 # Yaf
 
 [Yaf](https://github.com/laruence/yaf) 是以性能优秀著称的通过PHP扩展实现的框架。
