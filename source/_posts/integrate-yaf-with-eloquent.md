@@ -1,5 +1,5 @@
 title: Yaf集成Eloquent
-date: 2017-07-31 22:48:17
+date: 2017-08-1 11:46:00
 tags: [PHP, Yaf, Eloquent, Laravel]
 categories: PHP
 ---
