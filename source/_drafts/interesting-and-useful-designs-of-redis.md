@@ -171,6 +171,38 @@ Hash表如果之前有大量的KV数据存在，现在做了各类操作之后�
 
 + 将耗时操作分而治之，均摊到一些日常操作上，降低成本
 
+## 跳表
+
+跳表是在接触Redis之后了解到的一个有趣的数据结构，简而言之，跳表是在链表的基础上，增加层级的概念，每个层级只有特定的一些元素，一旦某层存在一个元素，所有低于这一层次的层级都会有这一元素。查找时通过最高层到最底层逐个查找，可以跳过一定个数的元素，这就是名字中“跳”字的由来。
+
+### 应用范围
+
+Redis中ZSET就是了跳表作为基础之一的数据结构，ZSET即有序集合，可以实现排行榜等功能。
+
+为什么说跳表只是构成ZSET的基础数据结构之一，我们来看一下ZSET的数据结构（位于`redis.h`中）：
+
+```
+typedef struct zset {
+    dict *dict;
+    zskiplist *zsl;
+} zset;
+```
+
+当中除了跳表`zskiplist`之外，还有个一个`dict`成员。
+
+这一dict成员的作用是记录存入对象的key和value之间的一一对应关系，如果要增加或者删除key值时，会联动的删除dict中的数据。所以`ZSCORE`[手册](http://redisdoc.com/sorted_set/zscore.html)提到的*O(1)*时间复杂度也不难理解了。查询一个有序列表中KEY的值是一个高频操作，冗余了数据，但是缺提高了性能。
+
+跳表的优势在于便于理解，实现难度低，然而查询时间复杂度近似于平衡二叉树的效果，带来的成本是空间的增加，即增加了大量的指针用于每层元素之间的关联。从实际使用上来看，带来的空间成本增加其实相对其他数据结构操作上的难度和代码复杂度来说，使用跳表是一个可以接受的方案。
+
+个人通过Java实现了一个跳表的[样例](https://github.com/liaoaoyang/LeetCode/blob/master/src/main/java/co/iay/leetcode/DataStructures/MySkipList.java)以及[测试用例](https://github.com/liaoaoyang/LeetCode/blob/master/src/main/java/co/iay/leetcode/Tester/DataStructures/TestMySkipList.java)。
+
+### 小结
+
+对于日常的开发工作来说，跳表中可以学习到的思路有：
+
++ 在需要速度的场合，如果在空间复杂度允许的前提下，尽量使用更为简单的数据结构
++ 适当的冗余数据，提高高频操作的便捷程度
+
 ## 操作的原子性
 
 一个操作是原子的，说明这个操作的结果只有两个：`成功`或者`失败`。不会存在说存在部分修改这样的一个中间状态。
@@ -190,9 +222,36 @@ Redis作为高性能的内存数据库，同一时间内并发操作的客户端
 
 ### Redis的命令执行过程
 
-这里展开说一下Redis的命令从客户端到服务器执行的过程。以下篇幅不会讨论`epoll/select/kqueue`等IO多路复用在`ae`中的具体实现细节，所有描述以`ae`提供的API为基础。
+这里稍微展开说一下Redis的单个命令从客户端到服务器执行的过程。以下篇幅不会讨论`epoll/select/kqueue`等IO多路复用在`ae`中的具体实现细节，所有描述以`ae`提供的API为基础，同时也不会讨论ae中的定时事件。
 
 #### redis-server初始化
 
 一个网络服务器，必定要经过bind->listen->accept->read->write这一系列步骤，才能完成和客户端的一次交互。
+
+作为一个内存数据库，Redis客户端发出网络连接，完成后发送请求，等待服务器处理，处理完成后Redis服务器会返回执行结果。
+
+Redis服务器的初始化可以在源码的`redis.c`文件中的`initServer()`函数中看到，在网络方面主要的操作步骤是：
+
++ 创建ae事件循环
++ 根据配置中的侦听端口，初始化各个侦听端口，对各个侦听端口完成bind/listen的操作
++ 将侦听的fd加入到ae事件循环侦听的fd列表中，通过`aeCreateFileEvent`注册`AE_READABLE`事件到回调函数`acceptTcpHandler`之上，即当侦听的fd可读时，调用`acceptTcpHandler`，即执行accept方法
+
+在ae事件循环过程中，会无限的调用`aeProcessEvents`获取现在可以执行的事件，然后会逐个进行处理，这些步骤都是串行的，这里是所有数据库操作起点，所以每一个redis操作也都是串行的。
+
+`aeProcessEvents`实际调用的是`aeApiPoll`获取可供操作的事件，由于每个事件除了fd之外还有其他的一些属性，ae的事件循环中以fd作为下标，在一个大小为`maxclients + 96`的类型为`aeFileEvent`数组中，记录了fd对应的ae事件结构，每次在通过`aeApiPoll`获取有事件产生的fd之后，可以直接通过fd作为下标，找到对应的附加信息（需要处理的事件类型和对应的回调函数，事件的附加信息）；此外会用了一个同样大小的数组`aeFiredEvent`数组，记录事件的触发执行情况，防止读事件在处理过程中被处理两次。
+
+#### redis-server执行命令
+
+Redis服务器在被客户端连接之后，会从连接的fd中读取数据，从accept开始之后的流程如下：
+
++ 当`acceptTcpHandler`被调用时，accept操作返回的fd会当做参数，传递给`createClient`方法，进行客户端的创建
++ `createClient`创建客户端的过程，会注册这一连接的fd的`AE_READABLE`事件到`readQueryFromClient`回调函数上
++ 即当客户端发送消息时，会在ae事件循环中，发现客户端fd产生了可读事件时，调用`readQueryFromClient`方法，将操作指令读取到客户端结构的缓冲区中并调用`processInputBuffer`执行指令
++ `processInputBuffer`实际上调用`processCommand`解析指令，操作对应的redis内存空间，完成后通过名字为`addReply`开头的各类函数返回数据
++ `addReply`实际完成的工作是向ae事件循环中注册写事件`AE_WRITABLE`的回调方法`sendReplyToClient`，向返回客户端的数据缓冲区中添加数据
+
+#### redis-server返回指令
+
+Redis服务器在执行完成指令之后，由于已经注册了写事件`AE_WRITABLE`，在下一次执行`aeProcessEvents`获取到了某个客户端的fd可写的情况下，就会调用注册的`sendReplyToClient`方法，将从`events`数组中获取的aeFileEvent结构取出，在当中的`client_data`数据项之中得知对应的客户端结构，从而得知需要从客户端结构的缓冲区中的数据是哪些，通过`write`系统调用回写数据到客户端
+
 
