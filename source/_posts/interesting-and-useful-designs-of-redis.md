@@ -1,5 +1,5 @@
 title: Redis里那些有用又有趣的设计
-date: 2017-07-29 11:34:44
+date: 2017-08-06 12:38:52
 tags: [Redis]
 categories: 系统
 ---
@@ -46,7 +46,7 @@ struct __attribute__ ((__packed__)) sdshdr64 {
 
 Redis在存入数据时，将数据按照`原样`存入`buf`之中。如同之前的例子，如何界定字符串长度的工作，交给了`len`，`len`无论在哪一版本的实现中，都代表了已存入的字符串长度，对于数据的读取，可以直接通过`len`得知需要读取的长度，做到了`原样`获取数据。
 
-通过一个变量记录已使用的字符数量，还可以将常见的`strlen`操作时间复杂度从`O(n)`降低到`O(1)`，这是一个空间换时间的操作。同样的做法还出现在链表结构中有所体现。
+通过一个变量记录已使用的字符数量，还可以将常见的`strlen`操作时间复杂度从`O(n)`降低到`O(1)`，这是一个空间换时间的操作。同样的做法还出现在链表结构中有所体现。Redis的量表是双端链表，链表结构存储了链表的头尾和长度等信息，对于获取头尾以及长度（PUSH/POP/LLEN）这样的高频操作，是有巨大的优势的。
 
 ### 空间管理
 
@@ -165,11 +165,50 @@ Hash表如果之前有大量的KV数据存在，现在做了各类操作之后�
 
 缩容的条件一般是`使用空间`和`已申请空间`比例小于0.1时触发，此时，也会利用两个`dictht`的数组进行和扩容类似的操作。
 
+***最后说一下执行时机的问题。***
+
+除了上面提到的将rehash分摊到每次操作上的做法，Redis内部还有一个定时任务的机制，在定时任务执行时，也会进行rehash操作，尝试对100个fields进行rehash操作（`redis.c`中的`databasesCron`->`incrementallyRehash`），限定的时间是1ms，如果1ms还没用完就已经完成了100个fileds的操作，那么会继续尝试，直到总的执行时间超过1ms。
+
+```
+// redis.c
+// 1ms的执行时间内，尽可能多的尝试rehash
+int incrementallyRehash(int dbid) {
+    /* Keys dictionary */
+    if (dictIsRehashing(server.db[dbid].dict)) {
+        dictRehashMilliseconds(server.db[dbid].dict,1);
+        return 1; /* already used our millisecond for this loop... */
+    }
+    /* Expires */
+    if (dictIsRehashing(server.db[dbid].expires)) {
+        dictRehashMilliseconds(server.db[dbid].expires,1);
+        return 1; /* already used our millisecond for this loop... */
+    }
+    return 0;
+}
+```
+
+```
+// dict.c
+int dictRehashMilliseconds(dict *d, int ms) {
+    long long start = timeInMilliseconds();
+    int rehashes = 0;
+
+    while(dictRehash(d,100)) {
+        rehashes += 100;
+        if (timeInMilliseconds()-start > ms) break;
+    }
+    return rehashes;
+}
+```
+
+这样的主动+被动，渐进式的完成任务，也体现在Redis对于过期键的删除策略之中。
+
 ### 小结
 
 对于日常的开发工作来说，dict中可以学习到的思路有：
 
 + 将耗时操作分而治之，均摊到一些日常操作上，降低成本
++ 主动操作和被动操作以及分摊操作相结合，分而治之，渐进式的完成任务
 
 ## 跳表
 
@@ -201,7 +240,6 @@ typedef struct zset {
 对于日常的开发工作来说，跳表中可以学习到的思路有：
 
 + 在需要速度的场合，如果在空间复杂度允许的前提下，尽量使用更为简单的数据结构
-+ 适当的冗余数据，提高高频操作的便捷程度
 
 ## 操作的原子性
 
@@ -234,24 +272,129 @@ Redis服务器的初始化可以在源码的`redis.c`文件中的`initServer()`�
 
 + 创建ae事件循环
 + 根据配置中的侦听端口，初始化各个侦听端口，对各个侦听端口完成bind/listen的操作
-+ 将侦听的fd加入到ae事件循环侦听的fd列表中，通过`aeCreateFileEvent`注册`AE_READABLE`事件到回调函数`acceptTcpHandler`之上，即当侦听的fd可读时，调用`acceptTcpHandler`，即执行accept方法
++ 将侦听的fd加入到ae事件循环侦听的fd列表中，通过`aeCreateFileEvent`注册`AE_READABLE`事件到回调函数`acceptTcpHandler()`之上，即当侦听的fd可读时，调用`acceptTcpHandler`，即执行accept方法
 
-在ae事件循环过程中，会无限的调用`aeProcessEvents`获取现在可以执行的事件，然后会逐个进行处理，这些步骤都是串行的，这里是所有数据库操作起点，所以每一个redis操作也都是串行的。
+在ae事件循环过程中，会无限的调用`aeProcessEvents()`获取现在可以执行的事件，然后会逐个进行处理，这些步骤都是串行的，这里是所有数据库操作起点，所以每一个redis操作也都是串行的。
 
-`aeProcessEvents`实际调用的是`aeApiPoll`获取可供操作的事件，由于每个事件除了fd之外还有其他的一些属性，ae的事件循环中以fd作为下标，在一个大小为`maxclients + 96`的类型为`aeFileEvent`数组中，记录了fd对应的ae事件结构，每次在通过`aeApiPoll`获取有事件产生的fd之后，可以直接通过fd作为下标，找到对应的附加信息（需要处理的事件类型和对应的回调函数，事件的附加信息）；此外会用了一个同样大小的数组`aeFiredEvent`数组，记录事件的触发执行情况，防止读事件在处理过程中被处理两次。
+`aeProcessEvents()`实际调用的是`aeApiPoll()`获取可供操作的事件，由于每个事件除了fd之外还有其他的一些属性，ae的事件循环中以fd作为下标，在一个大小为`maxclients + 96`的类型为`aeFileEvent`数组中，记录了fd对应的ae事件结构，每次在通过`aeApiPoll()`获取有事件产生的fd之后，可以直接通过fd作为下标，找到对应的附加信息（需要处理的事件类型和对应的回调函数，事件的附加信息）；此外会用了一个同样大小的数组`aeFiredEvent`数组，记录事件的触发执行情况，防止读事件在处理过程中被处理两次。
 
 #### redis-server执行命令
 
 Redis服务器在被客户端连接之后，会从连接的fd中读取数据，从accept开始之后的流程如下：
 
-+ 当`acceptTcpHandler`被调用时，accept操作返回的fd会当做参数，传递给`createClient`方法，进行客户端的创建
-+ `createClient`创建客户端的过程，会注册这一连接的fd的`AE_READABLE`事件到`readQueryFromClient`回调函数上
-+ 即当客户端发送消息时，会在ae事件循环中，发现客户端fd产生了可读事件时，调用`readQueryFromClient`方法，将操作指令读取到客户端结构的缓冲区中并调用`processInputBuffer`执行指令
-+ `processInputBuffer`实际上调用`processCommand`解析指令，操作对应的redis内存空间，完成后通过名字为`addReply`开头的各类函数返回数据
-+ `addReply`实际完成的工作是向ae事件循环中注册写事件`AE_WRITABLE`的回调方法`sendReplyToClient`，向返回客户端的数据缓冲区中添加数据
++ 当`acceptTcpHandler()`被调用时，accept操作返回的fd会当做参数，传递给`createClient`方法，进行客户端的创建
++ `createClient()`创建客户端的过程，会注册这一连接的fd的`AE_READABLE`事件到`readQueryFromClient()`回调函数上
++ 即当客户端发送消息时，会在ae事件循环中，发现客户端fd产生了可读事件时，调用`readQueryFromClient()`方法，将操作指令读取到客户端结构的缓冲区中并调用`processInputBuffer()`执行指令
++ `processInputBuffer()`实际上调用`processCommand()`解析指令，操作对应的redis内存空间，完成后通过名字为`addReply`开头的各类函数返回数据
++ `addReply`实际完成的工作是向ae事件循环中注册写事件`AE_WRITABLE`的回调方法`sendReplyToClient()`，向返回客户端的数据缓冲区中添加数据
 
 #### redis-server返回指令
 
-Redis服务器在执行完成指令之后，由于已经注册了写事件`AE_WRITABLE`，在下一次执行`aeProcessEvents`获取到了某个客户端的fd可写的情况下，就会调用注册的`sendReplyToClient`方法，将从`events`数组中获取的aeFileEvent结构取出，在当中的`client_data`数据项之中得知对应的客户端结构，从而得知需要从客户端结构的缓冲区中的数据是哪些，通过`write`系统调用回写数据到客户端
+Redis服务器在执行完成指令之后，由于已经注册了写事件`AE_WRITABLE`，在下一次执行`aeProcessEvents`获取到了某个客户端的fd可写的情况下（如客户端调用read系统调用），就会调用注册的`sendReplyToClient`方法，将从`events`数组中获取的aeFileEvent结构取出，在当中的`client_data`数据项之中得知对应的客户端结构，从而得知需要从客户端结构的缓冲区中的数据是哪些，通过`write`系统调用回写数据到客户端
+
+## 踢出策略
+
+Redis作为内存数据库，单机的内存是有限的，最好的做法就是不要存满。如果内存耗尽，不仅有可能存入不了新数据，甚至会影响其他正常功能，最极端的情况还有可能被操作系统杀死。
+
+Redis提供了踢出策略的配置，实际执行者是`redis.c`中的`freeMemoryIfNeeded()`。
+
+### 踢出依据
+
+Redis构建了一个对象的概念，先来看一下数据结构：
+
+```
+typedef struct redisObject {
+    unsigned type:4;
+    unsigned encoding:4;
+    unsigned lru:REDIS_LRU_BITS; /* lru time (relative to server.lruclock) */
+    int refcount;
+    void *ptr;
+} robj;
+```
+
+前面提到的各种数据结构，在Redis中，会先生成一个Redis对象，在Redis对象中，通过`encoding`区分底层实际实现使用了哪些数据结构（如LIST和HASH在数据量较少的时候，都使用了ziplist，即压缩列表实现），通过`refcount`对对象做引用计数，而踢出策略的关键因素之一就是`lru`，`lru`记录了最近一次使用这一个key的访问时间。每次对对象进行操作，都会更新这个属性。
+
+从注释也可以看到，这是一个相对值，相对于每次在`serverCron()`中都会更新的`server.lrulock`这一值，由于只有22个bit的存储容量，Redis为了表示更长的空转周期，通过一个常量`REDIS_LRU_CLOCK_RESOLUTION`作为倍乘的数字（默认值为1）。每次非`IDLETIME`操作都会将`lru`更新为`server.lrulock`。
+
+更新`server.lrulock`的方法是：
+
+```
+#define REDIS_LRU_CLOCK_MAX ((1<<REDIS_LRU_BITS)-1) /* Max value of obj->lru */
+
+void updateLRUClock(void) {
+    server.lruclock = (server.unixtime/REDIS_LRU_CLOCK_RESOLUTION) &
+                                                REDIS_LRU_CLOCK_MAX;
+}
+```
+
+即只取缓存的`server.unixtime`的后22位。
+
+通过`estimateObjectIdleTime()`来判断当前的空转时间。
+
+```
+/* Given an object returns the min number of seconds the object was never
+ * requested, using an approximated LRU algorithm. */
+unsigned long estimateObjectIdleTime(robj *o) {
+    if (server.lruclock >= o->lru) {
+        return (server.lruclock - o->lru) * REDIS_LRU_CLOCK_RESOLUTION;
+    } else {
+        return ((REDIS_LRU_CLOCK_MAX - o->lru) + server.lruclock) *
+                    REDIS_LRU_CLOCK_RESOLUTION;
+    }
+}
+```
+
+从上述的算法可以看出，可能会存在很早的key看起来访问日期更新的问题，比如a lru的值是1，b的lru值是3，当前lrulock的值是2，但是a的上一次访问时间可能2 * REDIS_LRU_CLOCK_MAX - 1，而b的上一次访问时间可能是REDIS_LRU_CLOCK_MAX - 3，于是a看起来比b更“活跃”。
+
+对于上面这个问题，作者在代码中注释道：
+
+> We have just 22 bits per object for LRU information.
+  So we use an (eventually wrapping) LRU clock with 10 seconds resolution.
+  2^22 bits with 10 seconds resolution is more or less 1.5 years.
+
+> Note that even if this will wrap after 1.5 years it's not a problem,
+  everything will still work but just some object will appear younger
+  to Redis. But for this to happen a given object should never be touched
+  for 1.5 years.
+
+> Note that you can change the resolution altering the
+  REDIS_LRU_CLOCK_RESOLUTION define.
+
+简而言之，作者认为这并不是一个问题，因为这种情况在`REDIS_LRU_CLOCK_RESOLUTION`设定为10的情况下，经过1.5年才会出现问题。
+
+### 踢出算法
+
+从`redis.h`中定义的常量，我们可以看出有如下的一些策略：
+
+```
+/* Redis maxmemory strategies */
+#define REDIS_MAXMEMORY_VOLATILE_LRU 0
+#define REDIS_MAXMEMORY_VOLATILE_TTL 1
+#define REDIS_MAXMEMORY_VOLATILE_RANDOM 2
+#define REDIS_MAXMEMORY_ALLKEYS_LRU 3
+#define REDIS_MAXMEMORY_ALLKEYS_RANDOM 4
+#define REDIS_MAXMEMORY_NO_EVICTION 5
+#define REDIS_DEFAULT_MAXMEMORY_POLICY REDIS_MAXMEMORY_VOLATILE_LRU
+```
+
+简而言之，分为三大类：LRU/随机/不踢出。
+
+从执行步骤上，可以分为：
+
++ 根据策略选择踢出操作需要操作的字典（服务器有`dict`与`expires`两个字典）
++ 根据策略执行最多`maxmemory_samples`次数的随机选择key的操作（默认值为3）
++ 根据策略选出需要踢出的key
++ 踢出key（从键空间中删除，释放内存）
+
+所以上述策略实际执行上有如下特点：
+
++ REDIS_MAXMEMORY_ALLKEYS_RANDOM与REDIS_MAXMEMORY_VOLATILE_RANDOM直接随机选择key踢出，区别在于一个从dict即键空间踢出，一个从设定了过期时间的键空间expires踢出
++ REDIS_MAXMEMORY_VOLATILE_LRU从设定了expire的key中随机选择lru值最大的键踢出，由于lru的值实际保存在在实现key的数据结构对象之中，所以需要再多一次查询，获取键空间中指向的对象，进而获取lru值
++ REDIS_MAXMEMORY_ALLKEYS_LRU与REDIS_MAXMEMORY_VOLATILE_LRU的区别在于直接选择lru值最大的key进行踢出
++ REDIS_MAXMEMORY_VOLATILE_TTL则是从设定了expire的key中随机选择expire值最小（即unix毫秒时间戳最小的值）的键踢出
+
+### 踢出时机
+
+在配置文件中设定了maxmemory和踢出策略之后，在每次处理指令即执行`processCommand()`时，都会尝试踢出操作。
 
 
