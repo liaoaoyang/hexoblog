@@ -10,6 +10,8 @@ categories: 系统
 
 关于时序数据库，除了常用的ElasticSearch之外，InfluxDB也是一个选择。
 
+<!-- more -->
+
 InfluxDB 使用 go 语言编写。个人认为几个外在的优点在于：
 
 1. 无特殊依赖，几乎开箱即用（如ES需要Java）；

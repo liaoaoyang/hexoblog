@@ -8,6 +8,8 @@ Facebook最近开源了他们的Android图片加载库 [fresco][1] ，3月26号�
 
 自己自然也想尝试这一个库，首要工作就是build。
 
+<!-- more -->
+
 # 在OS X中进行build
 
 这个库build过程中查看了`build.gradle`发现需要 [ndk][2] 支持，那么首要工作自然是安装ndk。

@@ -8,6 +8,8 @@ tags: Hexo,Pelican
 
 用Pelican在GitHub上搭blog有段时间了，一直想要更清爽简单的blog解决方案，之前使用的Pelican算是满足了我的需求，但是还想尝试一下其他的系统，同时从视觉效果上来说Hexo+[`Next`][1]主题目前更让我觉得满意，于是决定从Pelican迁移到Hexo。
 
+<!-- more -->
+
 # 问题
 
 搭建、使用Hexo的教程google一下就能找到，这里主要说一下自己迁移过程中遇到的一些小问题。
@@ -80,3 +82,5 @@ git config core.quotepath false
 [1]: https://github.com/iissnan/hexo-theme-next
 [2]: http://stackoverflow.com/questions/19456518/invalid-command-code-despite-escaping-periods-using-sed
 [3]: https://github.com/leecrossley/hexo-generator-cname
+
+

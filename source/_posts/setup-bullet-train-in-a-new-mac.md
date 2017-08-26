@@ -8,6 +8,8 @@ tags: Oh-My-Zsh
 
 不过Oh-My-Zsh的默认主题看久了仍然还是觉得有些枯燥，动了想要更换主题的念头，于是有了后面的步骤。
 
+<!-- more -->
+
 # 步骤
 
 ## 安装Vim
@@ -106,3 +108,5 @@ BULLETTRAIN_GIT_UNTRACKED=" %F{208}✭"
 [7]: https://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
 [8]: https://blog.wislay.com/wp-content/uploads/2015/12/Xterm_256color_chart.png
 [9]: https://blog.wislay.com/wp-content/uploads/2015/12/oh-my-zsh-with-bullet-train-sample.png
+
+
