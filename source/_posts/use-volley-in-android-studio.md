@@ -6,6 +6,8 @@ tags: [Android Studio, Volley]
 
 Android上的通信框架各种各样，比如 [android-async-http][1]，而最近同学们很多都推荐给我用Google家的 [Volley][2]。
 
+<!-- more -->
+
 # 生成volley aar
 
 官网上的指导手册说明了安装的步骤，首先自然是要下载源码：
@@ -94,3 +96,5 @@ repositories{
 
 [1]: http://loopj.com/android-async-http/
 [2]: http://developer.android.com/training/volley/index.html
+
+

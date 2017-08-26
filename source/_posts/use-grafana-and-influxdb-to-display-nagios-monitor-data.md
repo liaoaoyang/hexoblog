@@ -4,6 +4,12 @@ tags: [Nagios, InfluxDB, Grafana]
 categories: 系统
 ---
 
+Nagios 收集监控数据。
+InfluxDB 作为存储设施。
+Grafana 展现指标。
+
+<!-- more -->
+
 # 概述
 
 `Nagios`作为监控软件来说已经让人基本满意了，但是个人在使用中感觉还存在部分问题：

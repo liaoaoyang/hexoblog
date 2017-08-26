@@ -8,6 +8,8 @@ tags: LeetCode
 
 作为一道简单题，[ZigZag Conversion][1] 即将字符串按照之字形显示后，再逐行打印字符串。
 
+<!-- more -->
+
 # 分析
 
 这一题题意自然是很明显的，但是，这个之字形的形状需要注意，这一个之字形的形状应该是：
@@ -74,3 +76,5 @@ public class Solution {
 
 
 [1]: https://leetcode.com/problems/zigzag-conversion/
+
+

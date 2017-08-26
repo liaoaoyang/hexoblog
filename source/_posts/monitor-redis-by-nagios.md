@@ -12,6 +12,8 @@ tags: [Nagios,Redis]
 
 最初的想法是直接自己写脚本轮询各个实例的info信息，然后自行parse，当前运行Redis的实例不多，感觉工作量并不大，然而这时候想起组内之前的监控是在用`Nagios`，觉得为什么不让更专业的软件来完成这项工作呢？于是决定通过Nagios来完成监控。
 
+<!-- more -->
+
 以下会使用`/nip`指代Nagios的安装路径，以实际安装路径为准。
 
 # Nagios配置
@@ -144,3 +146,5 @@ Nagios的报错信息非常详细，基本可以直接定位到出错的行数�
 
 [1]: https://github.com/willixix/WL-NagiosPlugins
 [2]: https://github.com/willixix/WL-NagiosPlugins/blob/master/check_redis.pl
+
+

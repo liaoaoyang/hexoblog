@@ -18,6 +18,8 @@ img {
 
 `Out of memory`这个提示真是让人费解，内存感觉还是非常充足的样子。
 
+<!-- more -->
+
 所用的机器是两台阿里云的8核心16GB ECS服务器，Oracle数据库为`11G R2`。
 
 这里是作为[`上一篇`][2]的补充笔记。
@@ -46,3 +48,5 @@ cat /u01/app/oracle/product/11R2/dbs/spfileorcl.ora
 [1]: https://blog.wislay.com/wp-content/uploads/2014/11/ora27102.png
 [2]: http://www.liaoaoyang.com/articles/2014/11/09/ci-may-not-use-pconnect-with-oracle.html
 [3]: https://blog.wislay.com/wp-content/uploads/2014/11/no-enough-mem.png
+
+

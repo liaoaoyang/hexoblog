@@ -6,6 +6,8 @@ tags: [LAMP]
 
 之前自己一直用apt-get在Ubuntu上搭环境，实在是很方便，自动的解决了很多的依赖问题，可以说是真是很省心。用VPS的时候有时候也用比如[EZHTTP][1]这样的LAMP/LNMP一键安装包。不过老用这些方便的东西做自己就觉得有些问题，比如自己不能控制Apache、PHP、MySQL的安装位置，在需要进入这些软件的安装位置的时候，就得用dpkg -L来找到这些软件的安装位置。完全全自动的安装感觉自己也不能了解到更多的细节。
 
+<!-- more -->
+
 此外还有个很头疼的情况是Windows下对于一些软件的使用实在是很折腾，比如上个星期使用npm安装几个包，结果因为需要重新编译node，折腾了好长时间，各种花费时间成本，而在Linux下这些工作难度就会降低不少（相对的……）。在开发的时候经常需要部署代码到开发机上，然而在有跳板机的情况下，不能使用IDE直连开发环境，配Samba不知道是否可以，但是感觉上这样做不够安全。回家之后想要测点东西，开发机也难连上。最后还是决定在自己的PC上安装虚拟机的方式进行部署环境了。此外个人觉得在Linux下安装PHP扩展比在Win下安装方便好多，完全没有Win下那么的让人困惑。因为在自己工作中，目前只是需要一套LAMP的环境即可，发行版就用了自己用的比较多的Ubuntu。除了安装Apache、MySQL、PHP之外，还需要安装了memcached和Redis。
 
 Apache、MySQL、PHP的安装过程基本上和自己接触过的一些Linux软件安装过程相似，都是
@@ -253,3 +255,5 @@ sudo make install
 [3]: https://dev.mysql.com/doc/refman/5.1/zh/charset.html
 [4]: https://dev.mysql.com/doc/refman/5.1/zh/installing.html
 [5]: http://www.php-internals.com/book/?p=chapt02/02-02-01-apache-php-module
+
+

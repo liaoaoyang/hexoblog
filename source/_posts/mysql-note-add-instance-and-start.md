@@ -8,6 +8,8 @@ tags: [MySQL]
 
 增加实例这里指的的在源码编译安装完MySQL之后建立一个初始的数据库实例，占用某一端口，或者是使用新端口启动新的mysqld进程。
 
+<!-- more -->
+
 MySQL需要一些基础的数据库以及表来完成基本的设定，比如控制连接的**`mysql`.`user`**表：
 
 ```
@@ -83,3 +85,5 @@ mysqld_safe脚本是推荐的启动MySQL的方式，其中特点是增加了一�
 
 
 [1]: http://dev.mysql.com/doc/refman/5.0/en/mysqld-safe.html
+
+

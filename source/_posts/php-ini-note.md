@@ -11,8 +11,8 @@ tags: [PHP]
 在使用Yaf的过程中，在mac本机调试的时候发现模板不能正确显示，发现模板中都是短记号的形式，形如：
 
 ```
-&lt;div id="taskIdHolder" data-id="&lt;?php echo $task_id; ?&gt;"&gt;
-&lt;/div&gt;
+<div id="taskIdHolder" data-id="<?php echo $task_id; ?>">
+</div>;
 ```
 
 这类模板会不能正确地显示，解决的办法自然就是在php.ini中开启对短记号的支持：
@@ -20,3 +20,5 @@ tags: [PHP]
 ```
 short_open_tag = On
 ```
+
+
