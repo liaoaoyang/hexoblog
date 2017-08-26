@@ -10,6 +10,8 @@ tags: [mediawiki]
 
 在使用wiki的过程中，可能我们需要对外公开wiki的内容，但是不能让未授权用户编辑的情况，这时候就需要使用认证。在[官方网站][2]上有很多的认证插件可以选择，不过有时需要加入自己使用的wiki系统的一些特性的时候（比如用公司的统一登录接口），插件就不一定适用了，需要自己编写插件。
 
+<!-- more -->
+
 # 基本信息
 
 下面是Mediawiki默认的user表表结构，在下文中对于表字段的操作依据都来源于下方：
@@ -384,3 +386,5 @@ public static function onUserLoadFromSession($user, &$result)
 [4]: http://www.mediawiki.org/wiki/Manual:$wgUser
 [5]: http://www.mediawiki.org/wiki/Hooks
 [6]: http://www.mediawiki.org/wiki/Manual:Hooks/UserLoadFromSession
+
+

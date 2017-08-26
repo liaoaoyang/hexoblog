@@ -8,6 +8,8 @@ tags: [PHP,Oracle]
 
 不过最近接触的一个项目使用的是Oracle 11G数据库，开发前给大家搭环境的时候发现连接有一些问题，主要来说是安装配置上的一些问题。
 
+<!-- more -->
+
 ## 环境
 
 + CodeIgniter 2.2.0
@@ -58,3 +60,5 @@ db200是dbca安装数据库时指定的名称。
 [3]: http://www.oracle.com/technetwork/cn/topics/linuxx86-64soft-095635-zhs.html
 [4]: http://download.oracle.com/otn/linux/instantclient/112010/oracle-instantclient11.2-basic-11.2.0.1.0-1.x86_64.rpm
 [5]: http://download.oracle.com/otn/linux/instantclient/112010/oracle-instantclient11.2-devel-11.2.0.1.0-1.x86_64.rpm
+
+

@@ -6,6 +6,8 @@ tags: [C++,QtCreator,CMake]
 
 编译[`lwan`][22]的时候顺道看了下MinGW，发现64位版本也更新到了[`4.9`][23]，感觉自己很久没更新过Windows下的C++环境了，也想体验一下C++ 11，顺手升级了一下。
 
+<!-- more -->
+
 自己一直使用[`QtCreator`][24]作为C++开发环境，这个IDE个人很喜欢，自动补全功能相当方便，之前在开发Qt程序的时候这几乎是最好的选择，现在也开始出现了收费版本，但是仍然有社区版可用。目前CLion还没有放出正式版本，VS感觉又太重，QtCreator感觉还是一个很不错的选择。
 
 QtCreator的是支持[`CMake`][25]的，正好自己想要学习CMake，于是打算选用CMake作为构建部分的工具。
@@ -161,3 +163,5 @@ CMake参数上的区别在于需要指明`-DCMAKE_BUILD_TYPE=Release`:
 [24]: https://qt-project.org
 [25]: http://www.cmake.org
 [26]: http://ilovers.sinaapp.com/article/centos%E4%B8%8B%E5%AE%89%E8%A3%85gcc-481
+
+

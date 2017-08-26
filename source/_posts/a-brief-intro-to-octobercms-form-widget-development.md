@@ -10,6 +10,8 @@ categories: Try
 
 了解了框架的使用之后，自然是希望能够找到这一框架构建的应用进行进一步的学习。CMS作为常见的系统，模式上个人理解起来比较容易，同时涉及面也比较多，同时还有一定的实用性，学习起来有价值。
 
+<!-- more -->
+
 使用 Laravel 的 CMS 不少，有本文的主角[October CMS](https://github.com/octobercms/october)、[Asgard CMS](https://github.com/AsgardCms)、[Lavalite](https://github.com/LavaLite/cms)，但是后续的这些，无论从 GitHub star数目上，还是更新频率上，以及社区活跃度上，完全无法与 October CMS 相提并论。
 
 于是决定简单了解一下October CMS（以下将会用October表示，二者不做区分）。希望通过开发一个表单部件的方式，开始二次开发的学习。

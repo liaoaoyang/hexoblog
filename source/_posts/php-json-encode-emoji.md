@@ -16,6 +16,8 @@ ERROR 1366: Incorrect string value: '\xF0\x9F\x8D\xBA' for column
 
 然而在PHP中其实有一种情况是可以“存储”emoji表情字符的，那就是将包含emoji的字符串通过PHP的`json_encode`方法处理后再进行存储操作。
 
+<!-- more -->
+
 ## emoji不能直接存入UTF-8字符集的表中的原因
 
 根据维基百科上对于[`字符编码`][1]的定义，我们可以将`字符集`和`字符编码`看做同义词，后面二者将会不加区分的使用。
@@ -93,3 +95,5 @@ ulen = json_utf8_to_utf16(utf16, s, len);
 [4]: http://dev.mysql.com/doc/refman/5.6/en/charset-unicode-utf8.html
 [5]: http://stackoverflow.com/questions/3220031/how-to-filter-or-replace-unicode-characters-that-would-take-more-than-3-bytes
 [6]: https://blog.wislay.com/wp-content/uploads/2015/08/emoji_json_encode_test.png
+
+

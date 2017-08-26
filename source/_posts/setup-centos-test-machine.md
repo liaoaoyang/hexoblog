@@ -6,6 +6,8 @@ tags: [CentOS,VNC]
 
 最近想要做一些实验，无奈自己手头上没有富余的机器，看到好几个同事都自带电脑，没有用公司发的台式机，于是打算用这些台式机来做做实验。
 
+<!-- more -->
+
 公司本身是有完整的LAMP/LNMP环境安装包的，但是基于一些原因是不能使用的，整套环境只能自行安装，综合了一下决定安装如下软件：
 
 + CentOS 6.5 64位（可以考虑使用 [北理工][1] 的源，速度很快）
@@ -85,3 +87,5 @@ ssh -p port username@router_ip
 [5]: https://blog.wislay.com/wp-content/uploads/2014/10/vncviewer_connected-1024x796.png
 [6]: https://launchpad.net/libmemcached/1.0/1.0.16/+download/libmemcached-1.0.16.tar.gz
 [7]: https://blog.wislay.com/wp-content/uploads/2014/10/set_port_dispatch-1024x584.png
+
+
