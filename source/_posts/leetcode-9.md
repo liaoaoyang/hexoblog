@@ -8,6 +8,8 @@ tags: LeetCode
 
 [Palindrome Number](https://leetcode.com/problems/palindrome-number/) 判断文字是否是回文，输出布尔值。
 
+<!-- more -->
+
 # 分析
 
 作为一道 `Easy` 的题目，看起来并不是特别麻烦，不过这题要求无需增加附加的空间复杂度。
@@ -49,3 +51,5 @@ public class Solution {
     }
 }
 ```
+
+

@@ -8,6 +8,8 @@ tags: LeetCode
 
 [Reverse Integer](https://leetcode.com/problems/reverse-integer/) 简单题，要求将不带符号位的整数反转，如果遇到溢出问题，则输出0。
 
+<!-- more -->
+
 # 分析
 
 题目的特别之处在于溢出的处理，数字反转之后很可能超过了 `Integer.MAX_VALUE` 或者`Integer.MIN_VALUE` 的范围，应对这种情况，可以将溢出整数范围的的结果认定为0。
@@ -65,3 +67,5 @@ public class Solution {
     }
 }
 ```
+
+

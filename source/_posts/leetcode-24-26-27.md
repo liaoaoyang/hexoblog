@@ -6,6 +6,8 @@ tags: LeetCode
 
 [Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)，[Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)，[Remove Element](https://leetcode.com/problems/remove-element/) 均为简单题，合并到一起写解题思路。
 
+<!-- more -->
+
 # 24 Swap Nodes in Pairs
 
 ## 概述
@@ -138,3 +140,5 @@ public class Solution {
 # 其他
 
 26 与 27 逐个搬迁并不是最佳解法，还有优化的空间。
+
+

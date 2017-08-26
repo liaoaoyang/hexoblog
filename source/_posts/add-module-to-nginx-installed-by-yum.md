@@ -4,6 +4,10 @@ categories: LAMP/LNMP
 tags: [Nginx,yum]
 ---
 
+使用 yum 安装的 Nginx 添加模块也可以很简单。
+
+<!-- more -->
+
 # 为yum安装的Nginx添加模块
 
 `Nginx`一般都是编译安装，不过它本身也提供了通过[`yum`][1]安装的方式，比如在CentOS 6.5中需要添加的`/etc/yum.repos.d/nginx.repo `文件内容为：
