@@ -11,6 +11,8 @@ Nagios可以使用邮件报警，但是如果使用IM软件提供的API进行报
 
 总而言之就是可以拥有更为灵活的工具。
 
+<!-- more -->
+
 # 关键点
 
 ## 开发语言
@@ -138,3 +140,5 @@ _uid 9527
 [3]: https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/3/en/macrolist.html
 [4]: https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/3/en/objectdefinitions.html#contact
 [5]: https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/3/en/customobjectvars.html
+
+

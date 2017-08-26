@@ -10,6 +10,8 @@ tags: LeetCode
 
 大意即找出给定字符串中的连续最长非重复子序列的长度。
 
+<!-- more -->
+
 # 分析
 
 首先，字符串连续的前提之下，若在位置 `n` 与 `m` (`m`>`n`)出现了重复的字符，`n`位置以及之前的字符是不能再继续算入连续的非重复字符串的，所以，这时候统计的字符串的起始位置要变为 `n + 1` 位置下的字符。
@@ -53,3 +55,5 @@ public class Solution {
 ```
 
 [1]: https://leetcode.com/problems/longest-substring-without-repeating-characters/
+
+

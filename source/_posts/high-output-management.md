@@ -8,6 +8,8 @@ categories: Reading
 
 《[创业维艰](https://book.douban.com/subject/26306686/)》中多次提到格鲁夫的这本著作，作为作者霍洛维茨称赞的书籍，自然是需要阅读一番。
 
+<!-- more -->
+
 [安迪·格鲁夫](https://en.wikipedia.org/wiki/Andrew_Grove)作为一名匈牙利移民，经过自己积极努力的学习，成为了一名工程师，作为Intel的第三名员工，参与了Intel的创建，历经工程师、工程经理，最终作为Intel的总裁/CEO，成就了Intel的故事。格鲁夫已于`2016年3月21日`逝世，然而这本1995年出版的书籍再版多次，影响可谓众多。
 
 格鲁夫最为我熟悉的一点，应该是`Andy and Bill’s Law`，即`Andy gives, Bill takes away`，直到现在，制程的进步和技术的突破终于让CPU的性能似乎超过了操作系统和应用软件带来的消耗。

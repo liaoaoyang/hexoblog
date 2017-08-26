@@ -8,6 +8,8 @@ tags: [lwan,CentOS]
 
 其中最吸引我的就是静态文件能达到18w qps，加上它较小的代码体积，于是想要试用一下。
 
+<!-- more -->
+
 阅读[`Github`][2]上的说明可知，这一软件需要用cmake，无碍，自己手上这台CentOS 6.5的机器上有，不过看到编译参数里面的-flto之后心里凉了半截，这东西CentOS 6.5上带的GCC 4.4.7不能编译啊……
 
 好吧，简直就是噩耗，更换GCC实在不是什么省心的事儿，主要是手上测试机性能实在太差（Pentium双核+2G RAM+160GB HDD，10年的台式机……），估计只编译C/C++支持的话就得一个多小时了，无碍，那么就编译吧。
@@ -72,3 +74,5 @@ GCC准备好了之后自然就要开始编译，编译时原本出现了一些�
 [6]: http://www.multiprecision.org/index.php?prog=mpc&page=download
 [7]: https://github.com/lpereira/lwan/issues/75
 [8]: https://blog.wislay.com/wp-content/uploads/2014/12/lwan_succ.jpg
+
+

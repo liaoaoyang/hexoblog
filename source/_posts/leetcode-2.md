@@ -8,6 +8,8 @@ tags: LeetCode
 
 [Add Two Numbers][1] 难度为`Medium`，这一题目简单来说即给出两个序列，代表两个整数，模拟加法运算。
 
+<!-- more -->
+
 # 分析
 
 这一题难度个人认为依然不大，即把正常加法的算式过程用程序表示。需要特殊处理的是进位这一操作。
@@ -95,3 +97,5 @@ public class Solution {
 
 
 [1]: https://leetcode.com/problems/add-two-numbers/
+
+

@@ -9,6 +9,8 @@ tags: LeetCode
 作为复杂题的第一题([Median of Two Sorted Arrays][1])，在时间复杂度为*O(log (m+n))*（
 `m`，`n`均为数组长度）的要求之下，求两个已排序数组的中位数。
 
+<!-- more -->
+
 # 分析
 
 首先中位数的定义可以在 [WikiPedia][2] 上了解到。在已排序的前提下，即奇数元素个数的数组，为中间值；偶数元素个数的数组则为中间二值的算数平均数。
@@ -109,3 +111,5 @@ public class Solution {
 
 [1]: https://leetcode.com/problems/median-of-two-sorted-arrays/
 [2]: https://en.wikipedia.org/wiki/Median
+
+

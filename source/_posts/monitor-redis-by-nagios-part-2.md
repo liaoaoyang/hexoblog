@@ -16,6 +16,8 @@ tags: [Nagios,Redis]
 
 这一数字对于config文件来说，以及监控用户来说并不友好。
 
+<!-- more -->
+
 # 解决
 
 插件本身也提供了直接通过使用率进行监控的使用方式，我们所需要做的就是告知插件对应实例的最大内存容量，即：
@@ -64,3 +66,5 @@ check_command           check_redis_with_max_mem!6379!36G!70,90!'used_memory_hum
 以上。
 
 [1]: http://www.liaoaoyang.com/articles/2015/11/27/monitor-redis-by-nagios/
+
+
