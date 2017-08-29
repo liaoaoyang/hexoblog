@@ -346,5 +346,8 @@ public static function resetStd()
 }
 ```
 
+Workerman 中如此实现，结合[博文](https://www.adayinthelifeof.nl/2013/07/10/phps-resources-and-garbage-collection/)，可能与 PHP 的 GC 机制有关，对于 fd 0 1 2来说，PHP 会维持对这三个资源的引用计数，在直接 fclose 之后，会使得这几个 fd 对应的资源类型的变量引用计数为0，导致触发回收。所需要做的就是将这些变量变为全局变量，保证引用的存在。
+
+
 
 
