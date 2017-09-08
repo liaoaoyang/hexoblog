@@ -10,6 +10,8 @@ PHP7作为迄今为止性能最强的PHP版本，希望通过一些测试来了�
 
 由于个人水平有限，对测试的理解可能有所偏差，如有错误麻烦指出。
 
+<!-- more -->
+
 # 运行环境
 
 测试环境一共分为两台机器，机器A用作PHP运行环境，机器B作为压测机。A与B的CPU均为*12 x Xeon E5* + *16GB RAM*。
@@ -79,19 +81,19 @@ pm.max_requests = 10000
 
 ### 最小响应时间
 
-![min_response_time.png](http://blog.wislay.com/wp-content/uploads/2016/03/min_response_time.png)
+![min_response_time.png](https://blog.wislay.com/wp-content/uploads/2016/03/min_response_time.png)
 
 针对最小响应时间，并发数高低对最小响应时间没有显著的影响。在测试初期系统负载较低，测试数据应该表现最佳的阶段，推断二者在此阶段差距不大。
 
 ### 平均每秒请求数
 
-![requests_per_sec.png](http://blog.wislay.com/wp-content/uploads/2016/03/requests_per_sec.png)
+![requests_per_sec.png](https://blog.wislay.com/wp-content/uploads/2016/03/requests_per_sec.png)
 
 针对平均每秒请求数，`Nginx+PHP-FPM`的组合处理能力稍低于`Apache+modphp7`的组合，考虑到Nginx与PHP-FPM之间有网络通信(测试中采用了tcp socket)的开销，这个结果是可以接受的。高并发下考虑系统开销较大，请求处理能力会稍有下降。
 
 ### 平均响应时间
 
-![mean_response_time.png](http://blog.wislay.com/wp-content/uploads/2016/03/mean_response_time.png)
+![mean_response_time.png](https://blog.wislay.com/wp-content/uploads/2016/03/mean_response_time.png)
 
 针对平均响应时间，高并发下同样由于系统开销较大的缘故，平均的请求处理响应时间升高也是符合预期的。
 
@@ -101,21 +103,21 @@ pm.max_requests = 10000
 从性能指标上看，`Nginx+PHP-FPM`的组合与`Apache+modphp7`的组合在表现上没有巨大的差距，但是在系统负载上，`Nginx+PHP-FPM`的配置在高并发的情况下远优于`Apache+modphp7`的组合。
 在512并发时，在测试Hello world时，系统load的表现就有巨大的差距：
 
-![load_hello_world.png](http://blog.wislay.com/wp-content/uploads/2016/03/load_hello_world.png)
+![load_hello_world.png](https://blog.wislay.com/wp-content/uploads/2016/03/load_hello_world.png)
 
 同样的情况还出现在512并发之下对`Redis KV操作`的测试case之下：
 
-![load_redis_kv.png](http://blog.wislay.com/wp-content/uploads/2016/03/load_redis_kv.png)
+![load_redis_kv.png](https://blog.wislay.com/wp-content/uploads/2016/03/load_redis_kv.png)
 
 即便是在低并发（25并发）下，Redis KV此类需要操作网络资源的操作，`Apache+modphp7`在系统负载上的表现也差于`Nginx+PHP-FPM`：
 
-![load_redis_kv_c25.png](http://blog.wislay.com/wp-content/uploads/2016/03/load_redis_kv_c25.png)
+![load_redis_kv_c25.png](https://blog.wislay.com/wp-content/uploads/2016/03/load_redis_kv_c25.png)
 
 对于这类需要操作I/O的操作来说，`Apache+modphp7`的组合表现差于使用了异步I/O的Nginx与PHP-FPM的组合是符合预期的。
 
 在测试phpinfo()输出时，虽然二者在load上的区别不大，但是`Nginx+PHP-FPM`的组合在进程数这一指标上**完全占优**：
 
-![processes_count_phpinfo.png](http://blog.wislay.com/wp-content/uploads/2016/03/processes_count_phpinfo.png)
+![processes_count_phpinfo.png](https://blog.wislay.com/wp-content/uploads/2016/03/processes_count_phpinfo.png)
 
 考虑到`Nginx+PHP-FPM`的组合无需fork出新的子进程处理新到的客户端请求，以及phpinfo()的执行时间较长这两个因素，同时fork子进程等操作属于消耗系统资源较大的操作，这个现象是符合预期的。
 

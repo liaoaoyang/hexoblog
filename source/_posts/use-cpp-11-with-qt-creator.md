@@ -6,6 +6,8 @@ tags: [C++,QtCreator,CMake]
 
 编译[`lwan`][22]的时候顺道看了下MinGW，发现64位版本也更新到了[`4.9`][23]，感觉自己很久没更新过Windows下的C++环境了，也想体验一下C++ 11，顺手升级了一下。
 
+<!-- more -->
+
 自己一直使用[`QtCreator`][24]作为C++开发环境，这个IDE个人很喜欢，自动补全功能相当方便，之前在开发Qt程序的时候这几乎是最好的选择，现在也开始出现了收费版本，但是仍然有社区版可用。目前CLion还没有放出正式版本，VS感觉又太重，QtCreator感觉还是一个很不错的选择。
 
 QtCreator的是支持[`CMake`][25]的，正好自己想要学习CMake，于是打算选用CMake作为构建部分的工具。
@@ -135,29 +137,31 @@ CMake参数上的区别在于需要指明`-DCMAKE_BUILD_TYPE=Release`:
 
 
 
-[1]: http://blog.wislay.com/wp-content/uploads/2014/12/1.png
-[2]: http://blog.wislay.com/wp-content/uploads/2014/12/2.png
-[3]: http://blog.wislay.com/wp-content/uploads/2014/12/3.png
-[4]: http://blog.wislay.com/wp-content/uploads/2014/12/4.png
-[5]: http://blog.wislay.com/wp-content/uploads/2014/12/5.png
-[6]: http://blog.wislay.com/wp-content/uploads/2014/12/6.png
-[7]: http://blog.wislay.com/wp-content/uploads/2014/12/7.png
-[8]: http://blog.wislay.com/wp-content/uploads/2014/12/8.png
-[9]: http://blog.wislay.com/wp-content/uploads/2014/12/9.png
-[10]: http://blog.wislay.com/wp-content/uploads/2014/12/10.png
-[11]: http://blog.wislay.com/wp-content/uploads/2014/12/11.png
-[12]: http://blog.wislay.com/wp-content/uploads/2014/12/12.png
-[13]: http://blog.wislay.com/wp-content/uploads/2014/12/13.png
-[14]: http://blog.wislay.com/wp-content/uploads/2014/12/14.png
-[15]: http://blog.wislay.com/wp-content/uploads/2014/12/15.png
-[16]: http://blog.wislay.com/wp-content/uploads/2014/12/16.png
-[17]: http://blog.wislay.com/wp-content/uploads/2014/12/17.png
-[18]: http://blog.wislay.com/wp-content/uploads/2014/12/18.png
-[19]: http://blog.wislay.com/wp-content/uploads/2014/12/19.png
-[20]: http://blog.wislay.com/wp-content/uploads/2014/12/20.png
-[21]: http://blog.wislay.com/wp-content/uploads/2014/12/21.png
+[1]: https://blog.wislay.com/wp-content/uploads/2014/12/1.png
+[2]: https://blog.wislay.com/wp-content/uploads/2014/12/2.png
+[3]: https://blog.wislay.com/wp-content/uploads/2014/12/3.png
+[4]: https://blog.wislay.com/wp-content/uploads/2014/12/4.png
+[5]: https://blog.wislay.com/wp-content/uploads/2014/12/5.png
+[6]: https://blog.wislay.com/wp-content/uploads/2014/12/6.png
+[7]: https://blog.wislay.com/wp-content/uploads/2014/12/7.png
+[8]: https://blog.wislay.com/wp-content/uploads/2014/12/8.png
+[9]: https://blog.wislay.com/wp-content/uploads/2014/12/9.png
+[10]: https://blog.wislay.com/wp-content/uploads/2014/12/10.png
+[11]: https://blog.wislay.com/wp-content/uploads/2014/12/11.png
+[12]: https://blog.wislay.com/wp-content/uploads/2014/12/12.png
+[13]: https://blog.wislay.com/wp-content/uploads/2014/12/13.png
+[14]: https://blog.wislay.com/wp-content/uploads/2014/12/14.png
+[15]: https://blog.wislay.com/wp-content/uploads/2014/12/15.png
+[16]: https://blog.wislay.com/wp-content/uploads/2014/12/16.png
+[17]: https://blog.wislay.com/wp-content/uploads/2014/12/17.png
+[18]: https://blog.wislay.com/wp-content/uploads/2014/12/18.png
+[19]: https://blog.wislay.com/wp-content/uploads/2014/12/19.png
+[20]: https://blog.wislay.com/wp-content/uploads/2014/12/20.png
+[21]: https://blog.wislay.com/wp-content/uploads/2014/12/21.png
 [22]: http://lwan.ws
 [23]: http://mingw-w64.sourceforge.net/download.php#mingw-builds
 [24]: https://qt-project.org
 [25]: http://www.cmake.org
 [26]: http://ilovers.sinaapp.com/article/centos%E4%B8%8B%E5%AE%89%E8%A3%85gcc-481
+
+

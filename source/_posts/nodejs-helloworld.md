@@ -14,6 +14,8 @@ img {
 
 简单记录一下，代码包含大量的调试语句，暂时不贴代码，后期还得试着填坑，写出一个完善的hello world。
 
+<!-- more -->
+
 ## 要求
 
 这个通关作业要求主要有下面一些东西：
@@ -102,7 +104,7 @@ register方法根据参数1，将回调方法绑定到指定的节点上，例�
 
 
 
-[1]: http://blog.wislay.com/wp-content/uploads/2014/09/node_hello_world_struct.png
+[1]: https://blog.wislay.com/wp-content/uploads/2014/09/node_hello_world_struct.png
 [2]: http://nqdeng.github.io/7-days-nodejs
 [3]: http://expressjs.com
 [4]: http://requirejs.org
@@ -113,3 +115,5 @@ register方法根据参数1，将回调方法绑定到指定的节点上，例�
 [9]: http://anyofme.qiniudn.com/wp-content/uploads/2014/09/bpout.png
 [10]: http://weibo.com/shyvo
 [11]: http://www.infoq.com/cn/news/2011/11/tyq-nodejs-static-file-server
+
+

@@ -17,6 +17,8 @@ tags: [tmux]
 
 那么这时候就需要使用终端复用软件了。
 
+<!-- more -->
+
 # 问题
 
 tmux这个终端复用软件的强大无需多说，众多复杂的设置似乎对我来说并没有必要。而在使用中，自己曾经遇到过这些问题：
@@ -107,9 +109,9 @@ bind -n M-r source-file ~/.tmux.conf \; display "Configuration Reloaded!"
 
 键盘上的两个option/alt键只需使用一个即可。
 
-[1]: http://blog.wislay.com/wp-content/uploads/2016/02/tmux-multi-pane-effect.png
+[1]: https://blog.wislay.com/wp-content/uploads/2016/02/tmux-multi-pane-effect.png
 
-[2]: http://blog.wislay.com/wp-content/uploads/2016/02/tmux-iterm2-config.png
+[2]: https://blog.wislay.com/wp-content/uploads/2016/02/tmux-iterm2-config.png
 
 
 

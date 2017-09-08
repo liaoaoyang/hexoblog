@@ -4,6 +4,8 @@ tags: [Horowitz, Startup, Career]
 categories: Reading
 ---
 
+![The.Hard.Thing.About.Hard.Things](https://blog.wislay.com/wp-content/uploads/2016/10/The.Hard_.Thing_.About_.Hard_.Things.jpg)
+
 # 概述
 
 《[创业维艰](https://book.douban.com/subject/26306686/)》是今年来读过的印象较为深刻的书籍。
@@ -13,6 +15,8 @@ categories: Reading
 书中提到的一些观点个人读到之后觉得较为有趣，虽然并不身处于创业公司，但是读到之后个人还是引发了自己的思考，了解了创业这个方向的另一面。书中作者的措辞和举例的诚恳态度相当让人印象相当深刻。
 
 成功者的经历几乎无法复制，但是成功者的经验却是可能会后来者规避更多陷阱的有效参考。
+
+<!-- more -->
 
 在Kindle上入了中信的译本，对自己觉得有意思的一些观点做简要的记录。
 
