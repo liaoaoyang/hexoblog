@@ -1,4 +1,4 @@
-title: Yaf——源码概览
+title: Yaf源码概览(Part I)
 date: 2017-09-17 21:27:59
 tags: [Yaf, PHP]
 categories: PHP
@@ -7,6 +7,20 @@ categories: PHP
 # TL;DR
 
 `Yaf` 版本为 `2.3.0`。
+
+本篇主要简单记录了：
+
++ yaf.c
++ yaf_application.c
++ yaf_bootstrap.c
++ yaf_controller.c
++ yaf_dispatcher.c
++ yaf_exception.c
++ yaf_loader.c
++ yaf_plugin.c
++ yaf_registry.c
+
+源码阅读过程中的一些问题和理解。
 
 <!-- more -->
 
@@ -43,7 +57,7 @@ PHP 扩展的生命周期可以简单的概括为如下几个步骤：
 
 ## 定义 ini 中可配置的项目
 
-定义 ini 文件中的可配置项目代码段自 `PHP_INI_BEGIN()` 开始，到 `PHP_INI_END();` 结束，通过名如 `STD_PHP_INI_*` 的宏进行设定。
+定义 ini 文件中的可配置项目代码段自 `PHP_INI_BEGIN()` 开始，到 `PHP_INI_END()` 结束，通过名如 `STD_PHP_INI_*` 的宏进行设定。
 
 ```
 PHP_INI_BEGIN()
@@ -54,7 +68,7 @@ PHP_INI_BEGIN()
 PHP_INI_END();
 ```
 
-这里需要注意的是，宏的第三个参数有 `PHP_INI_ALL` 和 `PHP_INI_SYSTEM` 两种值，这两个值决定了是否可以在运行时修改这类参数。设定为 `PHP_INI_SYSTEM` 的是不允许在运行时改变的。
+这里需要注意的是，宏的第三个参数有 `PHP_INI_ALL` 和 `PHP_INI_SYSTEM` 两种值，这两个值决定了是否可以在运行时修改这类参数。设定为 `PHP_INI_SYSTEM` 的配置项是不允许在运行时改变的。
 
 所以，想要启用 yaf 的命名空间模式，就必须在 ini 中进行开启。
 
@@ -85,7 +99,7 @@ public void Yaf_Application::__construct(mixed  $config,
                                          string $section = ap.environ);
 ```
 
-根据传递的字符串作为框架 ini 文件的文件名，进行解析。
+根据传递的字符串作为本应用 ini 配置文件的文件名，进行解析。
 
 第二个参数 section 存在的情况下，会只读取 `section:` 开头的配置项目。
 
@@ -120,6 +134,8 @@ database.prefix    = ""
 ```
 
 根据方法原型中传入的配置文件路径，会解析出如 bootstrap 类所在文件路径之类的配置，并赋值到全局变量中，供其他功能使用。
+
+在读取配置文件的过程中，还会通过 `yaf_loader_register()` 函数注册默认的自动加载方法: `Yaf_Loader::autoload()`。
 
 ## run()
 
@@ -254,6 +270,131 @@ import() 方法主要完成的工作是加载对应的 PHP 文件到当前执行
 + `Model`为结尾的类会在`models`目录下进行查找
 + `Plugin`为结尾的类会在`plugins`目录下进行查找
 + 其他类会在`library`目录下进行查找
+
+### use_spl_autoload 配置项作用
+
+手册里面提及：
+
+> 在use_spl_autoload关闭的情况下, Yaf Autoloader在一次找不到的情况下, 会立即返回, 而剥夺其后的自动加载器的执行机会.
+
+从代码执行逻辑上来看，确实如此，[spl_autoload_register()](http://php.net/manual/zh/function.spl-autoload-register.php) 这一函数在注册的回调方法返回 `TRUE` 时，不会调用已注册函数列表中的下一个加载函数。
+
+Yaf 在设置这一个值为空或者关闭时（0）,做法是无论何种情况都返回真值：
+
+```
+if (!YAF_G(use_spl_autoload)) {
+		/** directory might be NULL since we passed a NULL */
+		if (yaf_internal_autoload(file_name, file_name_len, &directory TSRMLS_CC)) {
+			char *lc_classname = zend_str_tolower_dup(origin_classname, class_name_len);
+			if (zend_hash_exists(EG(class_table), lc_classname, class_name_len + 1)) {
+...
+				RETURN_TRUE; // 注意
+			} else {
+				efree(lc_classname);
+				php_error_docref(NULL TSRMLS_CC, E_STRICT, "Could not find class %s in %s", class_name, directory);
+			}
+		}  else {
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Failed opening script %s: %s", directory, strerror(errno));
+		}
+
+...
+		RETURN_TRUE; // 注意
+	}
+```
+
+但是在[集成 Eloquent 的尝试](/articles/2017/08/01/integrate-yaf-with-eloquent/)里，在配置文件中并没有配置这一个项目为1（即开启），按照扩展源码的逻辑，Composer 生成的加载器应该不起作用，这个和实际情况不符，因为 Eloquent 在[样例程序](https://github.com/liaoaoyang/YafWithEloquentSample)中表现正常。
+
+究其原因，其实很简单，即 Composer 生成的自动加载器在注册时要求注册到了加载函数队列的首位。
+
+先来看 `spl_autoload_register()` 方法的原型：
+
+```
+bool spl_autoload_register ([ callable $autoload_function [, bool $throw = true [, bool $prepend = false ]]] )
+```
+
+让人值得注意的是 `$prepend` 参数：
+
+```
+prepend
+	如果是 true，spl_autoload_register() 会添加函数到队列之首，而不是队列尾部。
+```
+
+进入到 `vendor` 目录，翻看 `autoload_real.php` 源码，可以看到：
+
+```
+class ComposerAutoloaderInit4604f3b23b635a9f5adc52f8616258a1
+{
+    private static $loader;
+
+    public static function loadClassLoader($class)
+    {
+        if ('Composer\Autoload\ClassLoader' === $class) {
+            require __DIR__ . '/ClassLoader.php';
+        }
+    }
+
+    public static function getLoader()
+    {
+        if (null !== self::$loader) {
+            return self::$loader;
+        }
+
+        ...
+
+        $loader->register(true); // 注意，这里为 true
+        
+        ...
+
+        return $loader;
+    }
+}
+```
+
+这个 register 方法的定义为：
+
+```
+/**
+ * Registers this instance as an autoloader.
+ *
+ * @param bool $prepend Whether to prepend the autoloader or not
+ */
+public function register($prepend = false)
+{
+    spl_autoload_register(array($this, 'loadClass'), true, $prepend);
+}
+```
+
+至此，可以看到，我们通过 Composer 生成的自动加载方法，实际上会优先于 yaf 自身的自动加载方法，由于 yaf 的自动加载方法也是通过 `spl_autoload_register()` 方法注册的，处于同一个加载函数队列，在 Composer 声明优先的情况下，加载函数执行顺序就会发生变化。
+
+# yaf_plugin.c
+
+插件抽象类 `Yaf_Plugin_Abstract` 的定义。在这里，可以看到一个插件可以实现的 hook 方法：
+
+```
+zend_function_entry yaf_plugin_methods[] = {
+	PHP_ME(yaf_plugin, routerStartup,  		 plugin_arg, ZEND_ACC_PUBLIC)
+	PHP_ME(yaf_plugin, routerShutdown,       plugin_arg, ZEND_ACC_PUBLIC)
+	PHP_ME(yaf_plugin, dispatchLoopStartup,  plugin_arg, ZEND_ACC_PUBLIC)
+	PHP_ME(yaf_plugin, dispatchLoopShutdown, plugin_arg, ZEND_ACC_PUBLIC)
+	PHP_ME(yaf_plugin, preDispatch,  		 plugin_arg, ZEND_ACC_PUBLIC)
+	PHP_ME(yaf_plugin, postDispatch, 		 plugin_arg, ZEND_ACC_PUBLIC)
+	PHP_ME(yaf_plugin, preResponse, 		 plugin_arg, ZEND_ACC_PUBLIC)
+	{NULL, NULL, NULL}
+};
+```
+
+他们都只接受两个参数：`request` 与 `response`。
+
+```
+ZEND_BEGIN_ARG_INFO_EX(plugin_arg, 0, 0, 2)
+	ZEND_ARG_OBJ_INFO(0, request, Yaf_Request_Abstract, 0)
+	ZEND_ARG_OBJ_INFO(0, response, Yaf_Response_Abstract, 0)
+ZEND_END_ARG_INFO()
+```
+
+# yaf_registry.c
+
+Yaf 全局存储类 `Yaf_Registry` 定义。用于在整个 app 声明周期内存储共有数据。所有数据都会存储到一个 zval 之中。
 
 # 参考资料
 
