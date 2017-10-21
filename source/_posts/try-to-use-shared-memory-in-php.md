@@ -9,6 +9,8 @@ tags: [PHP]
 
 PHP同样也提供了对共享内存操作的可能性，通过`shmop`扩展实现。
 
+对于多进程写入的并发控制，可以尝试通过`sysvsem`扩展进行控制。
+
 <!-- more -->
 
 # 应用
@@ -416,6 +418,73 @@ int shmop_write ( resource $shmid , string $data , int $offset )
 ```
 
 实现上来说，实际上是通过`memcpy`将字符串的值复制到共享内存的指定位置。
+
+#### 多进程写入
+
+考虑到多进程环境下同时写入带来的问题，`sysvsem`扩展提供的[信号量](http://php.net/manual/zh/book.sem.php)可以为我们解决这一问题。
+
+在需要多进程写入的地方，加入数目为1的信号量即可控制当前的共享内存只能有一个程序进行读写。
+
+信号量可以选择非阻塞的方式，即在`sem_acquire`时设置第二个参数为`true`即可。
+
+信号量在进程结束后默认情况下会自动释放，不一定需要通过`sem_release`显式释放。
+
+来看样例程序：
+
+```
+<?php
+	$sem_count = isset($argv[1]) ? $argv[1] : 1;
+	$sleep_s = isset($argv[2]) ? $argv[2] : 1;
+	$nonblocking = isset($argv[3]) ? true : false;
+
+	if (pcntl_fork() == 0) {
+		$key = ftok(__FILE__, 'r');
+		$sem = sem_get($key, $sem_count);
+		$pid = posix_getpid();
+
+		echo $pid . "|" . time() . "|TRY GET SEM\n";
+
+		if (sem_acquire($sem, $nonblocking)) {
+			echo $pid . "|" . time() . "|GOT SEM\n";
+			sleep($sleep_s);
+		} else {
+			echo $pid . "|" . time() . "|NO SEM\n";
+		}
+	}
+```
+
+同时启动5个进程：
+
+```
+→ for i in `seq 1 5`; do php test_sysvsem.php 1 1  ; done
+41214|1508595622|TRY GET SEM
+41214|1508595622|GOT SEM
+41216|1508595622|TRY GET SEM
+41218|1508595622|TRY GET SEM
+41220|1508595622|TRY GET SEM
+41222|1508595622|TRY GET SEM
+41216|1508595623|GOT SEM
+41218|1508595624|GOT SEM
+41220|1508595625|GOT SEM
+41222|1508595626|GOT SEM
+```
+
+选择非阻塞模式：
+
+```
+→ for i in `seq 1 5`; do php test_sysvsem.php 1 1 1 ; done
+41432|1508596102|TRY GET SEM
+41432|1508596102|GOT SEM
+41434|1508596102|TRY GET SEM
+41434|1508596102|NO SEM
+41436|1508596102|TRY GET SEM
+41436|1508596102|NO SEM
+41438|1508596102|TRY GET SEM
+41438|1508596102|NO SEM
+41440|1508596102|TRY GET SEM
+41440|1508596102|NO SEM
+```
+
 
 # 参考
 
