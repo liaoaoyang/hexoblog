@@ -7,6 +7,8 @@ tags: [Nginx]
 
 本文代码版本为`1.11.8`，手册原文来自于[官网](https://nginx.org/en/docs/http/ngx_http_core_module.html#location)。
 
+<!-- more -->
+
 # location
 
 > Syntax:	location [ = | ~ | ~* | ^~ ] uri { ... }
