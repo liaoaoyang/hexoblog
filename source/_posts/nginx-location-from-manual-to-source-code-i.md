@@ -1,5 +1,5 @@
-title: Nginx location
-date: 2017-01-15 00:13:16
+title: Nginx location 从手册到源码（Part I）
+date: 2017-10-30 00:13:16
 tags: [Nginx]
 ---
 
