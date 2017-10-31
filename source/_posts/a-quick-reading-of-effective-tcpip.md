@@ -1,4 +1,4 @@
-title:泛读《Effective TCP/IP》
+title: 泛读《Effective TCP/IP》
 date: 2017-11-01 00:01:47
 tags: [TCP/IP]
 categories: Reading
