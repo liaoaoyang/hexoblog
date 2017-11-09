@@ -151,7 +151,7 @@ dict结构中有一个两单元的数组`dictht ht[2]`，让人困惑的是，�
 
 Hash结构之所以快，是因为可以直接的找到对应key的值，如果现在存储的键值数量大于Hash结构中Hash结果值数组的容量，即必定存在了Hash冲突。Redis通过链表法解决了冲突，必然会让`O(1)`的查找速度退化为`O(n)`的线性查找速度。此时此刻，我们为了维持效率，需要做的是什么？
 
-答案当然是对Hash结果值结构`dictht`的对象进行扩容。在分配数据时，一般按照 2^n 的个数进行分配，这给扩容带来了极大的方便。Redis在对dict进行扩容时，容量直接X2，使得可用的空间从 2^n 升级到 2^n+1。
+答案当然是对Hash结果值结构`dictht`的对象进行扩容。在分配数据时，一般按照 2^n 的个数进行分配，这给扩容带来了极大的方便。Redis在对dict进行扩容时，容量直接X2，使得可用的空间从 2^n 升级到 2^(n+1)。
 
 描述了这么多内容，和两个`dictht`有什么关系呢？当然有关系。在扩容的时候，这两个`dictht`，一个表示正在进行存储的操作单元，一个表示正在进行扩容操作的单元，在扩容完成后，将扩容操作的单元变为实际存储单元。
 
@@ -362,6 +362,13 @@ unsigned long estimateObjectIdleTime(robj *o) {
 
 简而言之，作者认为这并不是一个问题，因为这种情况在`REDIS_LRU_CLOCK_RESOLUTION`设定为10的情况下，经过1.5年才会出现问题。
 
+
+### 键空间
+
+一个 Redis 实例可以有多个数据库，而每个数据库的数据结构中通过一个 dict 数据结构（名字也为dict）保存数据库中所有的键值对，记录 Redis 中每个 key 和当前 key 对应的对象。
+
+那么问题来了，Redis 如何记录过期时间呢？Redis 通过一个名为 expires 的 dict 结构记录过期时间，字典的键是 Redis 的键名字，值是过期时间，是一个 `long long` 类型的整数值，记录过期的毫秒级时间戳。
+
 ### 踢出算法
 
 从`redis.h`中定义的常量，我们可以看出有如下的一些策略：
@@ -388,7 +395,7 @@ unsigned long estimateObjectIdleTime(robj *o) {
 
 所以上述策略实际执行上有如下特点：
 
-+ REDIS_MAXMEMORY_ALLKEYS_RANDOM与REDIS_MAXMEMORY_VOLATILE_RANDOM直接随机选择key踢出，区别在于一个从dict即键空间踢出，一个从设定了过期时间的键空间expires踢出
++ REDIS_MAXMEMORY_ALLKEYS_RANDOM与REDIS_MAXMEMORY_VOLATILE_RANDOM直接 _随机_ 选择key踢出，区别在于一个从 `dict` 即键空间踢出，一个从设定了过期时间的键空间 `expires` 踢出
 + REDIS_MAXMEMORY_VOLATILE_LRU从设定了expire的key中随机选择lru值最大的键踢出，由于lru的值实际保存在在实现key的数据结构对象之中，所以需要再多一次查询，获取键空间中指向的对象，进而获取lru值
 + REDIS_MAXMEMORY_ALLKEYS_LRU与REDIS_MAXMEMORY_VOLATILE_LRU的区别在于直接选择lru值最大的key进行踢出
 + REDIS_MAXMEMORY_VOLATILE_TTL则是从设定了expire的key中随机选择expire值最小（即unix毫秒时间戳最小的值）的键踢出
