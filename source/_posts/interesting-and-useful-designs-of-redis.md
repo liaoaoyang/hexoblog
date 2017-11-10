@@ -404,4 +404,6 @@ unsigned long estimateObjectIdleTime(robj *o) {
 
 在配置文件中设定了maxmemory和踢出策略之后，在每次处理指令即执行`processCommand()`时，都会尝试踢出操作。
 
+同时，在 serverCron 运行时，也会通过每次操作一个数据库的模式，逐个数据库随机挑选 `expires` 键空间的键进行踢出操作。
+
 
