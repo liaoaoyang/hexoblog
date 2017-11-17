@@ -73,9 +73,9 @@ protected function streamWrite($stream, array $record)
 
 有人说如果进程写日志过程中挂了没有解锁怎么办？没关系，文件锁在进程退出之后就会被释放。
 
-## file_put_contents()的实现
+# file_put_contents()的实现
 
-### file_put_contents()完成的是open/write/close
+## file_put_contents()完成的是open/write/close
 
 翻阅 PHP `5.4.41` 源码中的 `ext/standard/file.c` 文件，可以看到 file_put_contents() 的实现(源码稍长，只做部分摘录)：
 
@@ -147,7 +147,7 @@ PHP_FUNCTION(file_put_contents)
 
 可以看出，`file_put_contents()` 实际上是完成了 open -> write -> close 三大操作。
 
-### 写入操作的实现
+## 写入操作的实现
 
 我们最为关心的 write 操作，跟踪源码可以发现，实际上是流结构体中的 write 函数指针指向的函数完成的：
 
