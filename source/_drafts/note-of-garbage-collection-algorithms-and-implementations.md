@@ -1,0 +1,55 @@
+title: 《垃圾回收的算法与实现》
+date: 2017-11-24 22:02:45
+tags: [GC]
+categories: Reading
+---
+
+# TL;DR
+
+[《垃圾回收的算法与实现》](https://book.douban.com/subject/26821357/)一书的读书笔记。
+
+<!-- more -->
+
+# 笔记
+
+## 第1章 学习GC之前
+
+### GC 是什么
+
+GC实际上可以看做管理堆上内存中对象的一个应用程序。
+
+### 对象的头部以及域
+
+对象分为`头部`和`域`两个部分，`头部`包含对象的基础信息以及GC相关的信息，`域`则是对象使用者可以直接操作的部分。如果对应到 PHP 上(参见`zend_gc.h`)，在生成 ZVAL 时，实际上会申请一个 `zval_gc_info` 大小的空间：
+
+```
+typedef struct _zval_gc_info {
+	zval z;
+	union {
+		gc_root_buffer       *buffered;
+		struct _zval_gc_info *next;
+	} u;
+} zval_gc_info;
+
+// ...
+
+/* The following macros override macros from zend_alloc.h */
+#undef  ALLOC_ZVAL
+#define ALLOC_ZVAL(z) 									\
+	do {												\
+		(z) = (zval*)emalloc(sizeof(zval_gc_info));		\
+		GC_ZVAL_INIT(z);								\
+	} while (0)
+```
+
+那么对于上述结构来说，头部应该是名为`u`的联合体，`zval z`则是对象的域。
+
+### GC算法的评价标准
+
+#### 常用的四大标准
+
++ 吞吐量，即单位时间内GC处理的内存大小
++ 最大暂停时间，即GC会中断程序正常执行的时间
++ 堆的使用效率，即内存的使用方式以及头信息的占用比例
++ 访问的局部性，即是否能更好的利用高速寄存器
+
