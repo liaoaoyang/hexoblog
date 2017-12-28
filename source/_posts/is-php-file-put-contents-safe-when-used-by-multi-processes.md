@@ -1,7 +1,7 @@
 title: PHP多进程中使用file_put_contents安全吗？
 date: 2017-11-13 23:07:11
 tags: [PHP]
-
+categories: PHP
 ---
 
 # TL;DR

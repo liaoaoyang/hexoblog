@@ -1,6 +1,7 @@
 title: Nginx location 从手册到源码（Part I）
 date: 2017-10-30 00:13:16
 tags: [Nginx]
+categories: LAMP/LNMP
 ---
 
 # 概述
