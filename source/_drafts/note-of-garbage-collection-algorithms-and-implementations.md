@@ -154,7 +154,9 @@ typedef struct _zval_gc_info {
 
 对于上述问题，`部分标记-清除`算法采用的是在引用计数减少时，将疑似垃圾对象入队列，并记录对象颜色为阴影状态`HATCH`，如果已经是`HATCH`了，说明对象已经是在队列之中，不用重复入队列。
 
-在需要进行GC操作时，从队列中扫描所有阴影（HATCH）的对象，将这些对象引用计数-1，并且将对象颜色标记为灰色（GRAY），即已经访问过的对象，防止重复操作，对于对象的子对象，做同样的处理。
+在需要进行GC操作时，从队列中扫描所有阴影（HATCH）或者黑色（BLACK）的对象，将这些对象的**子对象**引用计数-1，并且将**当前对象**颜色标记为灰色（GRAY），即已经访问过的对象，防止重复操作，对于对象的子对象，做同样的处理，因为子对象是从队列触达的，有可能并不在队列之中，也就是没有标记成HATCH，而是BLACK这样的正常状态，因为是一个递归调用，所以在最开始的描述中，会告知可以处理黑色的对象。
+
+队列在此处的作用相当重要：**队列保留了对象一旦从根切断访问路径之后仍能被GC程序访问到的唯一路径**。
 
 之后对队列中所有的灰色（GRAY）对象，对所有引用计数仍然大于0的对象，认定不存在循环引用问题，尝试涂为黑色（BLACK）并+1引用计数，对于黑色对象的不为黑色的子对象也做同样的操作；否则将对象标记为白色（WHITE），同样的，对于白色对象的子对象也做一样的操作。
 
@@ -166,7 +168,7 @@ typedef struct _zval_gc_info {
 
 ```
 +----------+      +----------+     +----------+
-|          | ---> |          | --> |          |
+|          | ---> |  BLACK   | --> |  BLACK   |
 |   ROOT   |      | Object B |     | Object A |
 |          |      |  ref:2   | <-- |  ref:1   |
 +----------+      +----------+     +----------+
@@ -176,7 +178,7 @@ typedef struct _zval_gc_info {
 
 ```
 +----------+      +----------+     +----------+
-|          | -X-> |  HATCH   | --> |          |
+|          | -X-> |  HATCH   | --> |  BLACK   |
 |   ROOT   |      | Object B |     | Object A |
 |          |      |  ref:1   | <-- |  ref:1   |
 +----------+      +----------+     +----------+
@@ -188,9 +190,9 @@ typedef struct _zval_gc_info {
 
 ```
 +----------+      +----------+     +----------+
-|          | -X-> |   GRAY   | --> |          |
+|          | -X-> |   GRAY   | --> |  BLACK   |
 |   ROOT   |      | Object B |     | Object A |
-|          |      |  ref:0   | <-- |  ref:1   |
+|          |      |  ref:1   | <-- |  ref:0   |
 +----------+      +----------+     +----------+
 ```
 
@@ -200,11 +202,11 @@ typedef struct _zval_gc_info {
 +----------+      +----------+     +----------+
 |          | -X-> |   GRAY   | --> |   GRAY   |
 |   ROOT   |      | Object B |     | Object A |
-|          |      |  ref:0   | <-- |  ref:0   |
+|          |      |  ref:1   | <-- |  ref:0   |
 +----------+      +----------+     +----------+
 ```
 
-根据算法，对于对象A的子对象对象B也需要进行标记操作，但是因为对象B已经标记为灰色，所以无需进行标记操作，下一步执行扫描灰色对象操作：
+根据算法，对于对象A的子对象对象B也需要进行标记操作，但是因为对象B已经标记为灰色，所以无需进行标记操作，但是仍然需要进行子对象引用计数-1操作，下一步执行扫描灰色对象操作：
 
 ```
 +----------+      +----------+     +----------+
@@ -217,4 +219,51 @@ typedef struct _zval_gc_info {
 不幸的是，对象B作为一个灰色对象并且引用计数已经为0，需要标记成白色，确认是一个垃圾对象。根据算法也要对子对象进行同样的操作，所以对象A也会标记成白色，因为当前没有存在黑色的对象，所以标记黑色操作不进行。
 
 最后回收所有白色对象。
+
+对于需要对**子对象**引用计数先-1，而不是对象本身-1，如果首先对对象本身-1，那么假设对象A当前引用计数为2，存在子对象B，子对象B没有引用A。现在从根对象中解除引用，A的引用计数变为1，在标记操作过程中会使得A对象引用计数边为0，而B对象引用计数也会变为0，但是事实上，B并没有引用A，不存在循环引用情况，但是这样的操作步骤却使得A误认为是垃圾，被清理。
+
+来看一下PHP中的标记阶段 `zobj_mark_grey()` 函数：
+
+```
+static void zobj_mark_grey(struct _store_object *obj, zval *pz TSRMLS_DC)
+{
+	Bucket *p;
+	zend_object_get_gc_t get_gc;
+
+	if (GC_GET_COLOR(obj->buffered) != GC_GREY) {
+		GC_BENCH_INC(zobj_marked_grey);
+		GC_SET_COLOR(obj->buffered, GC_GREY);
+		if (EXPECTED(EG(objects_store).object_buckets[Z_OBJ_HANDLE_P(pz)].valid &&
+		             (get_gc = Z_OBJ_HANDLER_P(pz, get_gc)) != NULL)) {
+			int i, n;
+			zval **table;
+			HashTable *props = get_gc(pz, &table, &n TSRMLS_CC);
+
+			for (i = 0; i < n; i++) {
+				if (table[i]) {
+					pz = table[i];
+					if (Z_TYPE_P(pz) != IS_ARRAY || Z_ARRVAL_P(pz) != &EG(symbol_table)) {
+						pz->refcount__gc--;
+					}
+					zval_mark_grey(pz TSRMLS_CC);
+				}
+			}
+			if (!props) {
+				return;
+			}
+			p = props->pListHead;
+			while (p != NULL) {
+				pz = *(zval**)p->pData;
+				if (Z_TYPE_P(pz) != IS_ARRAY || Z_ARRVAL_P(pz) != &EG(symbol_table)) {
+					pz->refcount__gc--;
+				}
+				zval_mark_grey(pz TSRMLS_CC);
+				p = p->pListNext;
+			}
+		}
+	}
+}
+```
+
+这里确实是对子对象先行操作引用计数的。
 
