@@ -1,6 +1,7 @@
 title: 查看MySQL LOAD DATA进度
 date: 2016-04-03 20:30:44
 tags: MySQL
+categories: LAMP/LNMP
 ---
 
 # 概述
