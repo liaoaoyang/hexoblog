@@ -1,5 +1,5 @@
 title: 《垃圾回收的算法与实现》
-date: 2017-11-24 22:02:45
+date: 2018-01-31 21:00:00
 tags: [GC]
 categories: Reading
 ---
@@ -266,4 +266,6 @@ static void zobj_mark_grey(struct _store_object *obj, zval *pz TSRMLS_DC)
 ```
 
 这里确实是对子对象先行操作引用计数的。
+
+未完待续。
 
