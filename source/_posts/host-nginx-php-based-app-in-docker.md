@@ -245,30 +245,30 @@ http {
     keepalive_timeout  65;
 
     server {
-		listen 80 default_server;
-		root /var/www/html;
-		index index.php index.html index.htm;
+        listen 80 default_server;
+        root /var/www/html;
+        index index.php index.html index.htm;
 
-		location / {
-		    try_files $uri $uri/ /index.php?$query_string;
-		}
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
 
-		location ~ \.php($|/) {
-			fastcgi_pass          test_phpfpm:9000;
-			fastcgi_index         index.php;
-			include               fastcgi_params;
-			set $path_info        "";
-			set $real_script_name $fastcgi_script_name;
+        location ~ \.php($|/) {
+            fastcgi_pass          test_phpfpm:9000;
+            fastcgi_index         index.php;
+            include               fastcgi_params;
+            set $path_info        "";
+            set $real_script_name $fastcgi_script_name;
 
-			if ($fastcgi_script_name ~ "^(.+?\.php)(/.+)$") {
-				set $real_script_name $1;
-				set $path_info        $2;
-			}
+            if ($fastcgi_script_name ~ "^(.+?\.php)(/.+)$") {
+                set $real_script_name $1;
+                set $path_info        $2;
+            }
 
-			fastcgi_param SCRIPT_FILENAME $document_root$real_script_name;
-			fastcgi_param SCRIPT_NAME     $real_script_name;
-			fastcgi_param PATH_INFO       $path_info;
-			fastcgi_param PHP_VALUE       open_basedir=$document_root:/tmp/:/proc/:/dev/urandom;
+            fastcgi_param SCRIPT_FILENAME $document_root$real_script_name;
+            fastcgi_param SCRIPT_NAME     $real_script_name;
+            fastcgi_param PATH_INFO       $path_info;
+            fastcgi_param PHP_VALUE       open_basedir=$document_root:/tmp/:/proc/:/dev/urandom;
         }
     }
 
