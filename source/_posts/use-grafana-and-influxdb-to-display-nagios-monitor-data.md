@@ -4,9 +4,12 @@ tags: [Nagios, InfluxDB, Grafana]
 categories: 系统
 ---
 
-Nagios 收集监控数据。
-InfluxDB 作为存储设施。
-Grafana 展现指标。
+# TL;DR
+
+Nagios 收集监控数据；
+InfluxDB 作为存储设施；
+Grafana 展现指标；
+Nagios 通过 [graphios](https://github.com/shawn-sterling/graphios) 向 InfluxDB写入数据。
 
 <!-- more -->
 
