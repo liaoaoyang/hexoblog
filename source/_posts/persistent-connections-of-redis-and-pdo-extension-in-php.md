@@ -6,7 +6,7 @@ categories: PHP
 
 # TL;DR
 
-PHP 中针对 Redis / MySQL 的长连接是生命周期级别的长连接，对于同一个进程的每一次请求都不会释放当前连接对象。而针对 TCP Socket 级别的连接是否已断开，则交给操作系统维持。
+PHP 中针对 Redis / MySQL 的长连接是生命周期级别的长连接，对于同一个进程的每一次相同目标的请求都不会释放当前连接对象。而针对 TCP Socket 级别的连接是否已断开，则交给操作系统维持。
 
 使用 PDO 对 MySQL 开启持久连接，要注意 PHP 执行的进程数量，不能超过 MySQL 设定的最大连接数。
 
@@ -349,8 +349,14 @@ MySQL PDO的连接实现与 Redis 类似，也是在传递了持久连接的参�
 
 # 小结
 
-对于开启 Redis/MySQL 的持久连接，PHP 通过将资源对象通过一定的标志存储到 MSHUTDOWN 阶段才会清理的全局哈希表中实现，在针对同一个服务器进行请求时，在 PHP 执行的整个生命周期之内保证了不会重新创建连接。
+PHP 中如果使用了 Redis/MySQL 的持久连接功能，PHP 内核会通过将资源对象存储到 **MSHUTDOWN** 阶段才会清理的全局 HashTable 中，实现针对同一个服务器进行请求时，在 PHP 执行的整个生命周期之内保证了正常情况下不会重新创建连接。
 
+# 相关
+
++ [PHPBOOK-7.1 函数的参数](https://github.com/walu/phpbook/blob/master/7.1.md)
++ [PHPBOOK-9.2 PHP中的资源类型](https://github.com/walu/phpbook/blob/master/9.2.md)
++ [PHPBOOK-14.1 14.1 流的概览](https://github.com/walu/phpbook/blob/master/14.1.md)
++ [Linux Programmer's Manual-POLL(2)](http://man7.org/linux/man-pages/man2/poll.2.html)
 
 
 
