@@ -160,6 +160,8 @@ public function _initConfig()
 }
 ```
 
+`2018-05-09更新`：针对于需要使用事务以及门面的情况，此处进行了[描述](/articles/2018/05/03/integrate-yaf-with-eloquent-ii/)。
+
 ## 实现Model
 
 将要操作的表结构为：
