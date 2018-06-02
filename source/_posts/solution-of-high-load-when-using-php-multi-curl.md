@@ -31,6 +31,10 @@ if ($this->active &&
 
 进程是重量级的，而连接较之进程是轻量级的，结合IO多路复用可以让并发发起网络请求的成本降低，`curl_multi*` 这一组函数就是 PHP 基于 `libcurl` 封装的并发发起请求的工具。
 
+网络上一些博文声称这一族函数是多线程发起请求，然而[libcurl官网](https://curl.haxx.se/libcurl/c/libcurl-tutorial.html)的文档中的 **The multi Interface** 部分说得很清楚，与这些博文相反：
+
+> The multi interface, on the other hand, allows your program to transfer multiple files in both directions at the same time, without forcing you to use multiple threads. The name might make it seem that the multi interface is for multi-threaded programs, but the truth is almost the reverse. The multi interface allows a single-threaded application to perform the same kinds of multiple, simultaneous transfers that multi-threaded programs can perform.
+
 编码上，通过 [`curl_multi_init`](http://php.net/manual/en/function.curl-multi-init.php) 创建并行请求处理对象，加入多个普通的 curl 对象；通过 [`curl_multi_exec`](http://php.net/manual/en/function.curl-multi-exec.php) 按照内置的状态机建立连接，传输数据；使用 [`curl_multi_select`](http://php.net/manual/en/function.curl-multi-select.php) 获取活跃的连接；之后尝试读取当中活跃连接的信息，记录对端返回的数据。
 
 还是以 Guzzle 作为样板，选出最重要的执行过程，参见文件 `guzzlehttp/ringphp/src/Client/CurlMultiHandler.php`：
@@ -103,5 +107,154 @@ private function processMessages()
     }
 }
 ```
+
+# curl_multi_select 之后的 usleep()
+
+Guzzle 作为优秀的 PHP HTTP 客户端，实现上在 `curl_multi_select` 返回 **-1** 时会休眠，这是降低 load 的一个看起来比较奇怪的关键操作。
+
+## 不带 sleep/usleep 的实现导致的问题
+
+有部分的代码实现上并没有在这一情况下进行休眠，导致的问题是 CPU 使用率过高，导致服务器 load 上升。
+
+load 与 CPU 使用时间有关系，当 CPU 繁忙时，服务器 load 会升高。常见的让服务器 CPU 飙升的操作就是死循环或者执行时间极短的不带休眠的循环。
+
+例如以下的实现：
+
+```
+$running = true;
+while ($running)
+{
+    if (CURLM_CALL_MULTI_PERFORM == curl_multi_exec($mh, $running)) {
+        continue;
+    }
+
+    curl_multi_select($mh, $selectTimeout);
+    
+    while ($ret = curl_multi_info_read($mh, $id)) {
+        // ETC     
+    }
+}
+```
+
+就会在服务器上就会引起服务器 load 上升。
+
+## PHP curl_multi_select 实现
+
+不带休眠的实现引起服务器 load 上述，要从 PHP `curl_multi_select` 的实现说起。
+
+PHP 内核源码中自带了 curl 扩展的源码，在 `ext/curl/multi.c` 文件中可以看到这一函数的实现：
+
+```
+/* {{{ proto int curl_multi_select(resource mh[, double timeout])
+   Get all the sockets associated with the cURL extension, which can then be "selected" */
+PHP_FUNCTION(curl_multi_select)
+{
+	zval           *z_mh;
+	php_curlm      *mh;
+	fd_set          readfds;
+	fd_set          writefds;
+	fd_set          exceptfds;
+	int             maxfd;
+	double          timeout = 1.0;
+	struct timeval  to;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r|d", &z_mh, &timeout) == FAILURE) {
+		return;
+	}
+
+	ZEND_FETCH_RESOURCE(mh, php_curlm *, &z_mh, -1, le_curl_multi_handle_name, le_curl_multi_handle);
+
+	_make_timeval_struct(&to, timeout);
+	
+	FD_ZERO(&readfds);
+	FD_ZERO(&writefds);
+	FD_ZERO(&exceptfds);
+
+	curl_multi_fdset(mh->multi, &readfds, &writefds, &exceptfds, &maxfd);
+	if (maxfd == -1) {
+		RETURN_LONG(-1);
+	}
+	RETURN_LONG(select(maxfd + 1, &readfds, &writefds, &exceptfds, &to));
+}
+/* }}} */
+```
+
+文档上提及：
+
+> On success, returns the number of descriptors contained in the descriptor sets. This may be 0 if there was no activity on any of the descriptors. On failure, this function will return -1 on a select failure (from the underlying select system call).
+
+即 -1 只在 `select` 系统调用失败时返回。 
+
+然而在实现中除去 PHP 函数的一些基本操作，可以看到返回 -1 的情况还会在 libcurl 的库函数 `curl_multi_fdset` 的 `maxfd` 变量被修改为 -1 后出现。
+
+[libcurl 的 curl_multi_fdset](https://curl.haxx.se/libcurl/c/curl_multi_fdset.html) 文档里提到的一段话值得注意：
+
+> If no file descriptors are set by libcurl, max_fd will contain -1 when this function returns. Otherwise it will contain the highest descriptor number libcurl set. When libcurl returns -1 in max_fd, it is because libcurl currently does something that isn't possible for your application to monitor with a socket and unfortunately you can then not know exactly when the current action is completed using select(). You then need to wait a while before you proceed and call curl_multi_perform anyway. How long to wait? Unless curl_multi_timeout gives you a lower number, we suggest 100 milliseconds or so, but you may want to test it out in your own particular conditions to find a suitable value.
+
+即 max_fd 返回 -1 时，需要主动休眠 100ms 或者根据实际情况决定。
+
+### libcurl curl_multi_fdset的实现
+
+深入到 libcurl 之中，在 `multi.c` 文件中找到这一函数的实现：
+
+```
+CURLMcode curl_multi_fdset(CURLM *multi_handle,
+                           fd_set *read_fd_set, fd_set *write_fd_set,
+                           fd_set *exc_fd_set, int *max_fd)
+{
+  /* Scan through all the easy handles to get the file descriptors set.
+     Some easy handles may not have connected to the remote host yet,
+     and then we must make sure that is done. */
+  struct Curl_multi *multi=(struct Curl_multi *)multi_handle;
+  struct Curl_one_easy *easy;
+  int this_max_fd=-1;
+  curl_socket_t sockbunch[MAX_SOCKSPEREASYHANDLE];
+  int bitmap;
+  int i;
+  (void)exc_fd_set; /* not used */
+
+  if(!GOOD_MULTI_HANDLE(multi))
+    return CURLM_BAD_HANDLE;
+
+  easy=multi->easy.next;
+  while(easy != &multi->easy) {
+    bitmap = multi_getsock(easy, sockbunch, MAX_SOCKSPEREASYHANDLE);
+
+    for(i=0; i< MAX_SOCKSPEREASYHANDLE; i++) {
+      curl_socket_t s = CURL_SOCKET_BAD;
+
+      if(bitmap & GETSOCK_READSOCK(i)) {
+        FD_SET(sockbunch[i], read_fd_set);
+        s = sockbunch[i];
+      }
+      if(bitmap & GETSOCK_WRITESOCK(i)) {
+        FD_SET(sockbunch[i], write_fd_set);
+        s = sockbunch[i];
+      }
+      if(s == CURL_SOCKET_BAD)
+        /* this socket is unused, break out of loop */
+        break;
+      else {
+        if((int)s > this_max_fd)
+          this_max_fd = (int)s;
+      }
+    }
+
+    easy = easy->next; /* check next handle */
+  }
+
+  *max_fd = this_max_fd;
+
+  return CURLM_OK;
+}
+```
+
+简单来说：
+
++ 根据在 PHP 内核传入的多个 curl 处理对象，逐个获取已经建立的 socket 对象
++ 根据读写类型，将 socket 对应的 fd 记录到外部 `select` 系统调用需要监听的 fd 集合中
++ 如果没有任何的可读写 fd，那么函数中的 `this_max_fd` 是不会被改变的，即返回的 `max_fd` 变量会被设置成 `this_max_fd` 的初始值 `-1`。
+
+
 
 
