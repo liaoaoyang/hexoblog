@@ -185,6 +185,8 @@ PHP_FUNCTION(curl_multi_select)
 
 即 -1 只在 `select` 系统调用失败时返回。 
 
+由于请求是用户主动发起的，select 系统调用的监听集合需要通过某种方式获取，在这个编程模型下，`curl_multi_fdset` 就是产生监听集合的方法。
+
 然而在实现中除去 PHP 函数的一些基本操作，可以看到返回 -1 的情况还会在 libcurl 的库函数 `curl_multi_fdset` 的 `maxfd` 变量被修改为 -1 后出现。
 
 [libcurl 的 curl_multi_fdset](https://curl.haxx.se/libcurl/c/curl_multi_fdset.html) 文档里提到的一段话值得注意：
@@ -193,68 +195,12 @@ PHP_FUNCTION(curl_multi_select)
 
 即 max_fd 返回 -1 时，需要主动休眠 100ms 或者根据实际情况决定。
 
-### libcurl curl_multi_fdset的实现
+在 PHP 执行过程中，我们无法判断是 select 系统调用返回的 -1 还是 `curl_multi_fdset` 的 `max_fd` 返回的 -1。
 
-深入到 libcurl 之中，在 `multi.c` 文件中找到这一函数的实现：
+而当 `curl_multi_fdset` 的 `max_fd` 返回 -1 时，说明 fd 集合中没有可以读写的 fd，应当避免频繁轮询这个函数，导致占满 CPU。
 
-```
-CURLMcode curl_multi_fdset(CURLM *multi_handle,
-                           fd_set *read_fd_set, fd_set *write_fd_set,
-                           fd_set *exc_fd_set, int *max_fd)
-{
-  /* Scan through all the easy handles to get the file descriptors set.
-     Some easy handles may not have connected to the remote host yet,
-     and then we must make sure that is done. */
-  struct Curl_multi *multi=(struct Curl_multi *)multi_handle;
-  struct Curl_one_easy *easy;
-  int this_max_fd=-1;
-  curl_socket_t sockbunch[MAX_SOCKSPEREASYHANDLE];
-  int bitmap;
-  int i;
-  (void)exc_fd_set; /* not used */
+# 结论
 
-  if(!GOOD_MULTI_HANDLE(multi))
-    return CURLM_BAD_HANDLE;
-
-  easy=multi->easy.next;
-  while(easy != &multi->easy) {
-    bitmap = multi_getsock(easy, sockbunch, MAX_SOCKSPEREASYHANDLE);
-
-    for(i=0; i< MAX_SOCKSPEREASYHANDLE; i++) {
-      curl_socket_t s = CURL_SOCKET_BAD;
-
-      if(bitmap & GETSOCK_READSOCK(i)) {
-        FD_SET(sockbunch[i], read_fd_set);
-        s = sockbunch[i];
-      }
-      if(bitmap & GETSOCK_WRITESOCK(i)) {
-        FD_SET(sockbunch[i], write_fd_set);
-        s = sockbunch[i];
-      }
-      if(s == CURL_SOCKET_BAD)
-        /* this socket is unused, break out of loop */
-        break;
-      else {
-        if((int)s > this_max_fd)
-          this_max_fd = (int)s;
-      }
-    }
-
-    easy = easy->next; /* check next handle */
-  }
-
-  *max_fd = this_max_fd;
-
-  return CURLM_OK;
-}
-```
-
-简单来说：
-
-+ 根据在 PHP 内核传入的多个 curl 处理对象，逐个获取已经建立的 socket 对象
-+ 根据读写类型，将 socket 对应的 fd 记录到外部 `select` 系统调用需要监听的 fd 集合中
-+ 如果没有任何的可读写 fd，那么函数中的 `this_max_fd` 是不会被改变的，即返回的 `max_fd` 变量会被设置成 `this_max_fd` 的初始值 `-1`。
-
-
+推广到 PHP 扩展方法 `curl_multi_select` 的调用，可以得知当返回 -1 时，不应该继续轮询请求 `curl_mutli_exec`，应当主动休眠，降低CPU占用。
 
 
