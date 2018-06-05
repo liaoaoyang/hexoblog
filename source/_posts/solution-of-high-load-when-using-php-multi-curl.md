@@ -197,10 +197,10 @@ PHP_FUNCTION(curl_multi_select)
 
 在 PHP 执行过程中，我们无法判断是 select 系统调用返回的 -1 还是 `curl_multi_fdset` 的 `max_fd` 返回的 -1。
 
-而当 `curl_multi_fdset` 的 `max_fd` 返回 -1 时，说明 fd 集合中没有可以读写的 fd，应当避免频繁轮询这个函数，导致占满 CPU。
+而当 `curl_multi_fdset` 的 `max_fd` 返回 -1 时，说明 fd 集合中没有可以读写的 fd，应当避免频繁轮询 `curl_multi_fdset` 这个函数，导致占满 CPU。
 
 # 结论
 
-推广到 PHP 扩展方法 `curl_multi_select` 的调用，可以得知当返回 -1 时，不应该继续轮询请求 `curl_mutli_exec`，应当主动休眠，降低CPU占用。
+推广到 PHP 扩展方法 `curl_multi_select` 的调用，可以得知当返回 **-1** 时，不应该继续轮询请求 `curl_mutli_exec` / `curl_multi_select`，应当主动休眠，降低CPU占用。
 
 
