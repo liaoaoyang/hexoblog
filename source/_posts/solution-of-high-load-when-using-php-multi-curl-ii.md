@@ -1,4 +1,4 @@
-title: 降低使用PHP curl_multi_* 时的 load
+title: 降低使用PHP curl_multi_* 时的 load（DNS查询）
 date: 2018-06-06 02:00:42
 tags: [cURL,PHP, curlmulti, DNS]
 categories: PHP
@@ -13,7 +13,11 @@ categories: PHP
 <!-- solution-of-high-load-when-using-php-multi-curl -->
 <!-- more -->
 
-# 
+# 现象
+
+首先安装启用了 c-ares 和不启用 c-ares 的两个 libcurl，并编译 curl 扩展
+
+## 启用 c-ares
 
 ```
 ➜  curl git:(master) ✗ /usr/local/cmdphp7/bin/php --ri curl
@@ -95,6 +99,8 @@ Lenght 21296 occurred 1 times
 ------ ----------- ----------- --------- --------- ----------------
 100.00    0.013255                  6892      5600 total
 ```
+
+## 不启用 c-ares
 
 ```
 ➜  curl git:(master) ✗ /usr/local/cmdphp7/bin/php --ri curl
