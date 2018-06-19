@@ -140,7 +140,7 @@ while ($running)
 
 ## PHP curl_multi_select 实现
 
-不带休眠的实现引起服务器 load 上述，要从 PHP `curl_multi_select` 的实现说起。
+不带休眠的实现会引起服务器 load 上升，要从 PHP `curl_multi_select` 的实现说起。
 
 PHP 内核源码中自带了 curl 扩展的源码，在 `ext/curl/multi.c` 文件中可以看到这一函数的实现：
 
