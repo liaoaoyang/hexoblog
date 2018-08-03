@@ -23,4 +23,10 @@ Redis 中使用 Lua 的相关笔记。
 printf "$(cat script.lua)" | sha1sum
 ```
 
+或者：
+
+```
+echo -n "$(cat script.lua)" | sha1sum
+```
+
 
