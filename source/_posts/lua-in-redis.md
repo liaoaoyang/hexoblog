@@ -191,6 +191,7 @@ return redis.call("LPUSH", KEYS[1], ARGV[2])
 + http://redisbook.readthedocs.io/en/latest/feature/scripting.html
 + http://redisdoc.com/script/eval.html
 + https://github.com/hellokangning/Redis-note/blob/master/20.%20Lua%E8%84%9A%E6%9C%AC.md
++ http://wiki.jikexueyuan.com/project/redis/lua.html
 
 
 
