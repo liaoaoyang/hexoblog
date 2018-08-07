@@ -186,6 +186,47 @@ return redis.call("LPUSH", KEYS[1], ARGV[2])
 
 这个方法的问题是每次都会带上需要加入的数据，如果生产者单次需要PUSH数据量小，并且获取数据的成本比较低，可以考虑直接如此改造。
 
+## 优先级队列
+
+来看开源项目 [Redisson](https://github.com/redisson/redisson) 中 Lua 的应用：[RedissonPriorityQueue](https://github.com/redisson/redisson/blob/master/redisson/src/main/java/org/redisson/RedissonPriorityQueue.java)。
+
+着重来看添加方法：
+
+```
+@Override
+public boolean add(V value) {
+    lock.lock();
+    
+    try {
+        checkComparator();
+    
+        BinarySearchResult<V> res = binarySearch(value, codec);
+        int index = 0;
+        if (res.getIndex() < 0) {
+            index = -(res.getIndex() + 1);
+        } else {
+            index = res.getIndex() + 1;
+        }
+            
+        commandExecutor.evalWrite(getName(), RedisCommands.EVAL_VOID, 
+           "local len = redis.call('llen', KEYS[1]);"
+            + "if tonumber(ARGV[1]) < len then "
+                + "local pivot = redis.call('lindex', KEYS[1], ARGV[1]);"
+                + "redis.call('linsert', KEYS[1], 'before', pivot, ARGV[2]);"
+                + "return;"
+            + "end;"
+            + "redis.call('rpush', KEYS[1], ARGV[2]);", 
+                Arrays.<Object>asList(getName()), 
+                index, encode(value));
+        return true;
+    } finally {
+        lock.unlock();
+    }
+}
+```
+
+中间的 Lua 代码即通过二分查找，在队列中寻找新元素的位置，如果在队列中间则插入，否则则追加到队尾。
+
 # 参考
 
 + http://redisbook.readthedocs.io/en/latest/feature/scripting.html
