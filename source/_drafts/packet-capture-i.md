@@ -32,6 +32,10 @@ categories: Try
 | **GUI** | 无 | 有 | 有 | 有 | 有（基于浏览器） | 有（基于浏览器） |
 | **源代码** | 公开 | 公开 | 不公开 | 不公开 | 公开 | 公开 |
 
+# 参考
+
++ https://github.com/avwo/whistle
+
 
 
 
