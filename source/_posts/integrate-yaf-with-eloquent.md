@@ -8,6 +8,7 @@ categories: PHP
 
 在Yaf中集成Eloquent ORM需要通过Composer管理相关依赖，并完成Eloquent的初始化。
 
+<!-- integrate-yaf-with-eloquent -->
 <!-- more -->
 
 # Yaf
