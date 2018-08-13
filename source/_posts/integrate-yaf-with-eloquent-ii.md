@@ -12,6 +12,7 @@ categories: PHP
 
 使用 DB Facade 需要为 Facade 提供已经关联了 `db` 作为键，以 `Illuminate\Database\Capsule\Manager` 的实例为值的容器。
 
+<!-- integrate-yaf-with-eloquent-ii -->
 <!-- more -->
 
 # 实验环境
