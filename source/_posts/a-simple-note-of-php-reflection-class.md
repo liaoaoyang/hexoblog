@@ -20,6 +20,8 @@ tags: [PHP]
 
 PHP 的[`反射类`](http://php.net/manual/en/class.reflectionclass.php) 接受字符串类名以及类作为构造方法的参数，通过生成的对象探明传入的类中包含的常量，方法等(private 也能探明)。
 
+反射除了可以获取常量，也可以获取方法和变量，只需要针对反射类获取对应的反射对象之后，绑定当前的对象，即可改变方法和成员的可见性，进行修改和操作。
+
 这里使用的正是它的 `getConstants` 方法。
 
 其他方法参见[手册]((http://php.net/manual/en/class.reflectionclass.php))。
