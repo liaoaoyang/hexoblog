@@ -11,6 +11,7 @@ tags: Hexo
 解决的方法可以是修改主题，在没有合适CDN的情况下，从服务器直接加载对应字体也是一种选择。
 
 <!-- more -->
+<!-- add-google-fonts-in-hexo-theme-next -->
 
 # 实现
 
