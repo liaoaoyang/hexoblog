@@ -101,5 +101,51 @@ soft 和 hard 的区别是 hard 值表示是参数的最大值，soft 值为设�
 
 服务端配置如上参数，压测客户端也需要配置，否则无法模拟出大量连接。
 
+### 网络
+
+#### 服务端
+
+Echo Server 使用 TCP 连接，服务端需要先 bind 一个端口，之后 accept 新连接。
+
+TCP 三次握手无需多言：
+
+1) 客户端发出 `SYN_(a)`
+2) 服务端收到 `SYN_(a)`，服务端返回 `SYN_(b) + ACK(a + 1)`
+3) 客户端收到 `SYN_(b) + ACK(a + 1)`，客户端返回 `ACK(b + 1)`
+
+在步骤`1`之后本次网络连接就是半连接状态，会进入一个队列，这个队列的大小由内核参数 `net.ipv4.tcp_max_syn_backlog` 决定。
+
+在步骤`3`之后，会将连接放入Accept队列，队列的大小由内核参数 `net.core.somaxconn` 决定。
+
+这两个队列至关重要，只有调用 `accept()` 方法之后，整个连接才是可以收发数据的状态，如果长时间不调用 `accept()`，客户端已经认为连接建立，发送数据会出现 `client fooling` 问题，长时间得不到回应会进入重试，一段时间过后客户端会主动发 `FIN` 断开连接，导致连接不成功。
+
+以上问题的详情可以阅读博文 [《关于TCP 半连接队列和全连接队列》](http://jm.taobao.org/2017/05/25/525-1/) 了解更多。
+
+回到 Echo Server 上，由于 `accept()` 操作不能马上完成，需要一定时间，在突发请求，或者压测的情况下瞬间建立大量连接，会导致队列拥塞，最后仍然会引起无法建立连接的问题。所以，适度提高队列大小有助于 Echo Server 以及实际网络服务器的开发。
+
+```
+# 最大值，原因参见 https://stackoverflow.com/questions/23862410/invalid-argument-setting-key-net-core-somaxconn
+net.core.somaxconn = 65535
+net.ipv4.tcp_max_syn_backlog = 65535
+```
+
+`net.core.somaxconn` 这个参数还会影响应用代码中 `backlog` 的取值，取值为 `min(net.core.somaxconn, backlog)`，这部分在服务端编码中再细致说明。
+
+#### 客户端
+
+作为压测客户端，需要注意的是，TCP请求可以看做一个四元组：
+
+`客户端IP-客户端端口-服务端IP-服务端口`
+
+想要获得大量的客户端连接，首先就需要足够多的端口。
+
+端口范围的内核参数 `net.ipv4.ip_local_port_range` 默认值范围不大，大约在30000个左右，我们可以将其放宽到保留端口附近的范围，这样，就能产生超过60000个客户端连接了。
+
+待续……
+
+# 参考
+
++ [不要在linux上启用net.ipv4.tcp_tw_recycle参数
+](https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/)
 
 
