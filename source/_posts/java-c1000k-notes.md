@@ -1,4 +1,4 @@
-title: java-c1000k-notes
+title: Java C1000K 笔记
 date: 2018-09-10 23:52:54
 categories: Java
 tags: [Java, NIO, 并发, 网络编程]
@@ -151,7 +151,7 @@ net.ipv4.tcp_max_syn_backlog = 65535
 
 核心内容如下：
 
-+ 每个请求产生一个协程，模拟一个客户端对于
++ 每个请求产生一个协程，模拟一个客户端
 + 并发程度通过 channel 控制，由于 channel 可以阻塞住操作，可以通过产生与并发度相同大小的队列，当一个请求完成时读取一个数据，起到控制并发度的效果
 + 同样通过 channel 完成请求数的计数操作
 
