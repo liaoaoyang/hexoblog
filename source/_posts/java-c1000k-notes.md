@@ -8,7 +8,7 @@ tags: [Java, NIO, 并发, 网络编程]
 
 Java 实现 C1000K 需要对服务器进行一定的调整，同时也需要选择合理的编程方式。
 
-个人对 Java 实现 C1000K 的学习笔记。
+个人对 Java 实现 C1000K 的学习笔记。虽然早已不是难事，终须自己实现一遍。
 
 <!-- more -->
 <!-- java-c1000k-notes -->
@@ -131,6 +131,8 @@ net.ipv4.tcp_max_syn_backlog = 65535
 
 `net.core.somaxconn` 这个参数还会影响应用代码中 `backlog` 的取值，取值为 `min(net.core.somaxconn, backlog)`，这部分在服务端编码中再细致说明。
 
+如果开启了 `iptables`，还需要注意 `net.*.nf_conntrack_max` 参数需要超过 1000K。
+
 #### 客户端
 
 作为压测客户端，需要注意的是，TCP请求可以看做一个四元组：
@@ -141,11 +143,72 @@ net.ipv4.tcp_max_syn_backlog = 65535
 
 端口范围的内核参数 `net.ipv4.ip_local_port_range` 默认值范围不大，大约在30000个左右，我们可以将其放宽到保留端口附近的范围，这样，就能产生超过60000个客户端连接了。
 
-待续……
+# 开发
+
+## 客户端
+
+考虑到开发的难度以及趣味性，选择 Go 进行开发（代码见[GitHub](https://github.com/liaoaoyang/LearningJava/blob/master/scripts/simple_nio_test_echo_client.go)）。
+
+核心内容如下：
+
++ 每个请求产生一个协程，模拟一个客户端对于
++ 并发程度通过 channel 控制，由于 channel 可以阻塞住操作，可以通过产生与并发度相同大小的队列，当一个请求完成时读取一个数据，起到控制并发度的效果
++ 同样通过 channel 完成请求数的计数操作
+
+考虑到单网卡难以模拟出百万级别连接（单网卡对应服务端端口只能使用约60000个端口），可以使用 docker 模拟出 16+ 客户端访问 `docker0` 设备上侦听端口的服务端程序，或者选择服务端开启 16 个以上端口。
+
+## 服务端
+
+服务端不会主动断开连接，TIME-WAIT 问题暂且不用处理。
+
+通过 BIO + 多线程模式在客户端数量较少时没有问题，Java 目前了解到一个用户线程对应一个内核线程，客户端数目多时，为了降低系统消耗，考虑使用 NIO 实现（代码见[GitHub](https://github.com/liaoaoyang/LearningJava/blob/master/src/main/java/co/iay/learn/learningjava/nio/SimpleNIOEchoServerMT.java)）。
+
+NIO 的核心就是一个线程管理多个连接，通过 Selector 实现对多个连接读写时间的监听，在读写时间触发时处理 IO 操作。
+
+选用 Java NIO 实现 C1000K 服务器，实际上是 Reactor 模式的具体实现。
+
+为了提高处理速度，考虑将 accept 操作与 IO 操作分开。
+
+IO 操作即便是在非阻塞的 Channel 里也是占用 CPU 时间的，为了充分利用多核心，可以考虑将线程数调成CPU个数加一个。
+
+# 效果
+
+服务端选择启动多个端口：
+
+```
+java -jar -Dbacklog=40000 -Dhostname=192.168.16.1 -Dport=`seq 30001 30020|tr "\n" ","|sed 's/,$//'` SimpleNIOEchoServerMT.jar
+```
+
+客户端选择压测多个端口，并使用长连接，每 30+rand(0,30) 秒发送一个数据包，平均每秒活跃连接数30000左右：
+
+```
+go run simple_nio_test_echo_client.go -h=192.168.16.1 -P=`seq 30001 30020|tr "\n" ","|sed 's/,$//'` -i 30 -r 10 -c 60000
+```
+
+使用 ss 查看：
+
+```
+➜  ~ ss -s
+Total: 1153054 (kernel 1153152)
+TCP:   1174832 (estab 1055390, closed 92005, orphaned 22030, synrecv 0, timewait 0/0), ports 0
+
+Transport Total     IP        IPv6
+*         1153152   -         -
+RAW       0         0         0
+UDP       9         8         1
+TCP       1082827   1082827   0
+INET      1082836   1082835   1
+FRAG      0         0         0
+```
+
+以上是 NIO 实现 C1000K 服务器的摘要。
 
 # 参考
 
-+ [不要在linux上启用net.ipv4.tcp_tw_recycle参数
-](https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/)
++ [强烈推荐余锋老师的博文](http://blog.yufeng.info/archives/category/network/)
++ [不要在linux上启用net.ipv4.tcp_tw_recycle参数](https://www.cnxct.com/coping-with-the-tcp-time_wait-state-on-busy-linux-servers-in-chinese-and-dont-enable-tcp_tw_recycle/)
++ [关于TCP 半连接队列和全连接队列](http://jm.taobao.org/2017/05/25/525-1/)
++ [构建C1000K的服务器(1)](http://www.ideawu.net/blog/archives/740.html)
++ [iptables 的 conntrack 连接跟踪模块](https://awen.me/post/59062.html)
 
 
