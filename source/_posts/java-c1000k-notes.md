@@ -1,8 +1,10 @@
+<!--
 title: Java C1000K 笔记
 date: 2018-09-10 23:52:54
 categories: Java
 tags: [Java, NIO, 并发, 网络编程]
 ---
+-->
 
 # TL;DR
 
@@ -163,7 +165,7 @@ net.ipv4.tcp_max_syn_backlog = 65535
 
 通过 BIO + 多线程模式在客户端数量较少时没有问题，Java 目前了解到一个用户线程对应一个内核线程，客户端数目多时，为了降低系统消耗，考虑使用 NIO 实现（代码见[GitHub](https://github.com/liaoaoyang/LearningJava/blob/master/src/main/java/co/iay/learn/learningjava/nio/SimpleNIOEchoServerMT.java)）。
 
-NIO 的核心就是一个线程管理多个连接，通过 Selector 实现对多个连接读写时间的监听，在读写时间触发时处理 IO 操作。
+NIO 的核心就是一个线程管理多个连接，通过 Selector 实现对多个连接读写事件的监听，在读写时间触发时处理 IO 操作。
 
 选用 Java NIO 实现 C1000K 服务器，实际上是 Reactor 模式的具体实现。
 
@@ -210,5 +212,6 @@ FRAG      0         0         0
 + [关于TCP 半连接队列和全连接队列](http://jm.taobao.org/2017/05/25/525-1/)
 + [构建C1000K的服务器(1)](http://www.ideawu.net/blog/archives/740.html)
 + [iptables 的 conntrack 连接跟踪模块](https://awen.me/post/59062.html)
++ [Node版单机100w连接（C1000K）是如何达成的](https://www.jianshu.com/p/e0b52dc702d6)
 
 
