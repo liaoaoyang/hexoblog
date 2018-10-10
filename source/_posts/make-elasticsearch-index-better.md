@@ -173,6 +173,9 @@ GitHub 上的一个 Issue [Creating Index painfully slow on cluster with large i
 
 另一个方向上，ES 中的索引都会组织到文件中，如果索引个数太多，加上网络连接，可能会导致进程达到可以打开的 FD 的极限，出现 `too many open files` 问题，导致连接不上 ES ，造成服务不可用 ，虽然可以[动态的进行修改](https://huoding.com/2015/08/02/460)，但是毕竟不是根本解决方案。
 
+此处多提一句，ES中对于打开文件数的问题，可以考虑在启动脚本中直接通过 ulimit 修改，当然要注意`fs.file-max` >= `fs.nr_open` >= `configs in /etc/security/limits.conf` 这一个关系。
+
+
 综上，可以定期合并一些按小时或者按天组织的小索引，这些小索引虽然占用空间不大，但是给 Master 和整个集群带来了管理成本。
 
 ### 合并索引
