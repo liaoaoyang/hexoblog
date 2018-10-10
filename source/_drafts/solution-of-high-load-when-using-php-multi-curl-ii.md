@@ -58,7 +58,7 @@ libSSH Version => libssh2/1.4.3
 curl_multi_select return -1 1657 times
 curl_multi_select runs 1659 times
 curl_multi_exec runs 1659 times
-Lenght 21296 occurred 1 times
+Length 21296 occurred 1 times
 % time     seconds  usecs/call     calls    errors syscall
 ------ ----------- ----------- --------- --------- ----------------
  85.97    0.012255           2      5634      5627 access
@@ -140,7 +140,7 @@ ZLib Version => 1.2.7
 curl_multi_select return -1 0 times
 curl_multi_select runs 2 times
 curl_multi_exec runs 2 times
-Lenght 21296 occurred 1 times
+Length 21296 occurred 1 times
 % time     seconds  usecs/call     calls    errors syscall
 ------ ----------- ----------- --------- --------- ----------------
  33.76    0.000186           5        37           munmap
