@@ -124,6 +124,13 @@ Java 中提供了4种元注解：
 
 作用范围看名称基本都能对应上。默认是全部。
 
+# 开源项目中的使用
+
+## Fastjson
+
+## SpringBoot
+
+
 # 参考
 
 + [Lesson: Annotations (Oracle Java Documentation)](https://docs.oracle.com/javase/tutorial/java/annotations/index.html)
