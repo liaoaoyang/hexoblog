@@ -152,6 +152,8 @@ AOP 是常用的编程模式。
 
 Spring 框架在扫描各个 bean 时，会根据指定的 Aspect 信息，为各个 bean 的指定方法关联上各个 Advice，在执行时逐个运行。
 
+例如对外提供接口调用时，需要对一些接口提供自定的参数校验等功能，可以考虑通过自定义注解的方式，提供一个 `@Around` advice，判断参数是否合理即可。
+
 # Lombok
 
 Java 开发中对象的 Getter/Setter 方法以及常规的构造方法让代码变得臃肿，[Lombok](https://github.com/rzwitserloot/lombok) 通过注解的方式，在编译阶段修改 AST，实现生成的 class 文件中带有对应的方法。
