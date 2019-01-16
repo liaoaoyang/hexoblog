@@ -32,9 +32,18 @@ categories: Try
 | **GUI** | 无 | 有 | 有 | 有 | 有（基于浏览器） | 有（基于浏览器） |
 | **源代码** | 公开 | 公开 | 不公开 | 不公开 | 公开 | 公开 |
 
+## tcpdump
+
+经典的服务端抓包工具，在各大 Linux 发行版软件仓库中均有提供，主要用于终端下的抓包排查问题。
+
+[tcpdump](https://www.tcpdump.org/manpages/tcpdump.1.html) 顾名思义，直接能够抓取 TCP 协议的数据包，对于 Web 应用开发者来说已经足够底层，可以用于排查各种 DNS 以及更上层网络协议中出现的问题。
+
+tcpdump 基于 libpcap 实现，是全能型的网络抓包选手。
+
 # 参考
 
 + https://github.com/avwo/whistle
++ [libpcap实现机制及接口函数](https://www.jianshu.com/p/ed6db49a3428)
 
 
 
