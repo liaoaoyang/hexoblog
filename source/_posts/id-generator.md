@@ -10,7 +10,7 @@ categories: 系统
 
 设计一个发号器至少需要考虑ID唯一性，有序性，性能，可用性，使用成本，以及一定的数据安全问题。
 
-作为一个极其成熟的业务功能，发号器有大量的实现，有海量的文章描述各类要点，按序选择即可，无需重复造轮子。
+作为一个极其成熟的业务功能，发号器有大量的实现，有海量的文章描述各类要点，按需选择即可，无需重复造轮子。
 
 <!-- id-generator -->
 <!-- more -->
@@ -178,6 +178,8 @@ id 发号器说简单也确实挺简单。任何一个技术点，只要理解�
 + [Leaf——美团点评分布式ID生成系统](https://tech.meituan.com/2017/04/21/mt-leaf.html)
 + [baidu/uid-generator](https://github.com/baidu/uid-generator/blob/master/README.zh_cn.md) 
 + [微信序列号生成器架构设计及演变](https://www.infoq.cn/article/wechat-serial-number-generator-architecture)
++ [分布式ID生成系统怎么做](http://www.10tiao.com/html/773/201712/2247487246/2.html)
++ [如何做一个靠谱的发号器](https://tech.youzan.com/id_generator/)
 
 
 
