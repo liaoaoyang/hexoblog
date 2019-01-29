@@ -74,8 +74,37 @@ categories: 系统
 
 可以为随机数。
 
-### scope
+#### scope
 
 即微信 OAuth 中的 scope 值，即`snsapi_base` 与 `snsapi_userinfo`。
+
+### 举例
+
+假设域名为 `wxtauth.foo.com`，`bid` 为 `test`，回调地址 `url` 为 `https://wxtauth.foo.com/callback`，`scope` 为 `snsapi_userinfo`，客户端和服务端需要完成的工作为：
+
+#### 客户端
+
+假设服务端的域名为 `swan.bar.com`，默认情况下（假设服务端使用HTTPS），用于中转的登录接口 URL 为 `https://swan.bar.com/wechat/swan/wxtauth`。
+
+完成自己的业务逻辑之后拼接出 URL：
+
+ `https://swan.bar.com/wechat/swan/wxtauth?bid=test&url=https://wxtauth.foo.com/callback&scope=snsapi_userinfo&key=123456`
+ 
+ 并302重定向到这一 URL 之上。
+ 
+在弹出新窗口中完成授权操作后，需要在 `url` 参数指定的 URL 上实现相应的登录成功处理逻辑，即读取回调中的携带的 `wx_tauth_data` 参数，之后继续完成对应的业务逻辑。
+
+#### 服务端
+
+处理逻辑参见 [\App\Http\Controllers\WeChatController::wxtauth](https://github.com/liaoaoyang/swan/blob/master/app/Http/Controllers/WeChatController.php)。
+
+服务端首先需要在 `.env` 文件中配置 `bid` 为 `test` 的请求所允许的回调域名。配置格式：
+
+WX_TAUTH_CLIENT_***TEST***_AUTHENTIC_DOMAINS=wxtauth.foo.com
+
+请注意加粗的 `TEST` ，每新增一个bid，需要增加一行配置，在加粗部分替换为大写的 `bid` 的值。
+
+之后服务端会完成微信相关的授权功能，这里特别感谢 [安正超](https://github.com/overtrue) 优秀的开源项目 [EasyWeChat](https://github.com/overtrue/wechat)，让微信接入变得极为简便。
+
 
 
