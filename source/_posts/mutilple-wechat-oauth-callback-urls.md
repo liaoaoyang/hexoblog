@@ -78,6 +78,30 @@ categories: 系统
 
 即微信 OAuth 中的 scope 值，即`snsapi_base` 与 `snsapi_userinfo`。
 
+当 `scope` 为 `snsapi_base` 时，会使用静默登录，返回的数据格式为：
+
+```
+{"id":"oatEjwAVy4H_1FsftYTBD2beKwBE"}
+```
+
+如果需要比如用户头像等信息，需要将 `scope` 设定为 `snsapi_userinfo` 并进入授权模式。
+
+返回数据格式样例为：
+
+```
+{
+"openid": "oatEjwAVy4H_1FsftYTBD2beKwBE",
+"nickname": "TEST",
+"sex": 1,
+"language": "en",
+"city": "朝阳",
+"province": "北京",
+"country": "中国",
+"headimgurl": "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4dwGTeTIeRzJ65COm8ia2MMpjbNUo0GtDJWy4g1dJHDClV6BmMt9gr5gDicHXxJsyB1GicSiae2rxkIE5LfsCmA/132",
+"privilege": []
+}
+```
+
 ### 举例
 
 假设域名为 `wxtauth.foo.com`，`bid` 为 `test`，回调地址 `url` 为 `https://wxtauth.foo.com/callback`，`scope` 为 `snsapi_userinfo`，客户端和服务端需要完成的工作为：
