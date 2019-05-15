@@ -8,6 +8,8 @@ tags: [生活片段]
 
 动物还是在自己的栖息地看起来最可爱。
 
+多图杀猫。
+
 <!--  visiting-a-zoo  -->
 <!-- more -->
 
@@ -63,11 +65,27 @@ tags: [生活片段]
 
 ![](https://wx2.sinaimg.cn/mw1024/727517e7ly1g2ahyxyh70j235s23vqvf.jpg)
 
+鹦鹉应该是最适合拍照的鸟类之一了。
+
+![](https://wx4.sinaimg.cn/mw1024/727517e7ly1g2bvcpa5lpj22yf1yznpo.jpg)
+
+![](https://wx2.sinaimg.cn/mw1024/727517e7ly1g2bvcqus7xj22ip1oh4qw.jpg)
+
 如果说有什么最让人羡慕的，那当然是胖达和河马了，对它们来说，哪一天不是周末呢？
 
 ![](https://wx4.sinaimg.cn/mw1024/727517e7ly1g2ahnushuoj235s23vhe3.jpg)
 
 ![](https://wx3.sinaimg.cn/mw1024/727517e7ly1g2ahnzouozj22k91pj7wn.jpg)
+
+![](https://wx1.sinaimg.cn/mw1024/727517e7ly1g2bvcsd4rxj22nq1rvqvd.jpg)
+
+![](https://wx1.sinaimg.cn/mw1024/727517e7ly1g2bvctjiwcj22kz1pz7wn.jpg)
+
+![](https://wx3.sinaimg.cn/mw1024/727517e7ly1g2bvcv9u55j22q31tfx6w.jpg)
+
+![](https://wx4.sinaimg.cn/mw1024/727517e7ly1g2bvcmz8twj235s23v4r3.jpg)
+
+![](https://wx1.sinaimg.cn/mw1024/727517e7ly1g2bvgelpv6j22g91mvnpi.jpg)
 
 然而狐猴都在仰望天空，明天还是打起精神去好好工作。
 
