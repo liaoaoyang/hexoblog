@@ -180,6 +180,7 @@ id 发号器说简单也确实挺简单。任何一个技术点，只要理解�
 + [微信序列号生成器架构设计及演变](https://www.infoq.cn/article/wechat-serial-number-generator-architecture)
 + [分布式ID生成系统怎么做](http://www.10tiao.com/html/773/201712/2247487246/2.html)
 + [如何做一个靠谱的发号器](https://tech.youzan.com/id_generator/)
++ [PHP ramsey/uuid](https://github.com/ramsey/uuid)
 
 
 
