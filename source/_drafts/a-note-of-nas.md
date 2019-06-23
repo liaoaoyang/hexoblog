@@ -69,9 +69,13 @@ tags: [NAS]
 + Crucial MX500 SSD
 + Team DDR3L 1600 8G RAM
 
+![qnap-551-with-ram-n-hdd](https://blog.wislay.com/wp-content/uploads/2019/06/qnap-551-with-ram-n-hdd.jpg)
+
 都是已有物件，一切以节省为核心。
 
 内存的扩充是重点，否则2G内存基本和虚拟机、Docker等功能告别了。安装很简单，卸下全部硬盘托盘后即可轻松装入。这台机器并不挑内存，试了一下多年以前大学的拆机内存条依然能够使用。
+
+![qnap-551-ram](https://blog.wislay.com/wp-content/uploads/2019/06/qnap-551-ram.jpg)
 
 ASUS AC-68U 作为千兆家用路由器对于这台 NAS 来说已经足够了，配上一根6类线也基本够用，想要让 NAS 无线化？看看[兼容列表](https://www.qnap.com/zh-cn/compatibility/?device_category=usb%20wi-fi)吧。
 
@@ -102,6 +106,8 @@ xware Docker 方案没有使用成功。
 目标转向虚拟机方案，通过虚拟机安装 Windows 系统，结合迅雷U享版，映射 NAS 上的目录为网络驱动器，通过远程桌面管理。
 
 这一方案在 QNAP TS-551 上主要存在性能问题，考虑到不能过于影响宿主机性能，分配单核心处理，如果下载并行个数超过2个，虚拟机卡顿到无法使用。事实上，2个任务都已经让 CPU 负载高达 100% 了，鱼与熊掌不可得兼，能用就好。
+
+![qnap-551-thunder-in-vm](https://blog.wislay.com/wp-content/uploads/2019/06/qnap-551-thunder-in-vm.jpg)
 
 桌面管理上，推荐直接远程桌面，使用安装Office自带的远程桌面连接工具，还可以做到共享剪贴板，方便添加任务。VNC Viewer也有尝试使用，没有解决共享剪贴板问题，放弃。
 
