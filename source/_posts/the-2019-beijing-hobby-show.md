@@ -1,6 +1,7 @@
 title: 模型展
 date: 2019-04-28 00:03:51
 tags: [生活片段]
+categories: Life
 ---
 
 # TL;DR
