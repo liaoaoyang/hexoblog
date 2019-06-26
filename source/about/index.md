@@ -8,7 +8,6 @@ I'm focusing on Java/LNMP based web application development, which my major skil
 
 You might find me at:
 
-Weibo: [@ilay](http://weibo.com/wislay/)
 GitHub: [@liaoaoyang](https://github.com/liaoaoyang)
 
 
