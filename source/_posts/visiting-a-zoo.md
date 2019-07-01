@@ -71,12 +71,6 @@ tags: [生活片段]
 
 ![](https://blog.wislay.com/wp-content/uploads/2019/05/727517e7ly1g2bvcqus7xj22ip1oh4qw.jpg)
 
-如果说有什么最让人羡慕的，那当然是胖达和河马了，对它们来说，哪一天不是周末呢？
-
-![](https://blog.wislay.com/wp-content/uploads/2019/05/727517e7ly1g2ahnushuoj235s23vhe3.jpg)
-
-![](https://blog.wislay.com/wp-content/uploads/2019/05/727517e7ly1g2ahnzouozj22k91pj7wn.jpg)
-
 ![](https://blog.wislay.com/wp-content/uploads/2019/05/727517e7ly1g2bvcsd4rxj22nq1rvqvd.jpg)
 
 ![](https://blog.wislay.com/wp-content/uploads/2019/05/727517e7ly1g2bvctjiwcj22kz1pz7wn.jpg)
@@ -86,6 +80,12 @@ tags: [生活片段]
 ![](https://blog.wislay.com/wp-content/uploads/2019/05/727517e7ly1g2bvcmz8twj235s23v4r3.jpg)
 
 ![](https://blog.wislay.com/wp-content/uploads/2019/05/727517e7ly1g2bvgelpv6j22g91mvnpi.jpg)
+
+如果说有什么最让人羡慕的，那当然是胖达和河马了，对它们来说，哪一天不是周末呢？
+
+![](https://blog.wislay.com/wp-content/uploads/2019/05/727517e7ly1g2ahnushuoj235s23vhe3.jpg)
+
+![](https://blog.wislay.com/wp-content/uploads/2019/05/727517e7ly1g2ahnzouozj22k91pj7wn.jpg)
 
 然而狐猴都在仰望天空，明天还是打起精神去好好工作。
 
