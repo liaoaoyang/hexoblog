@@ -19,4 +19,10 @@
   </a>
 </div>
 
+{% if config.icp %}
+<div class="icp-info">
+<a href="http://www.miitbeian.gov.cn/">{{ config.icp }}</a> 
+</div>
+{% endif %}
+
 {% block footer %}{% endblock %}
