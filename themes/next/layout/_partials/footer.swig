@@ -21,7 +21,7 @@
 
 {% if config.icp %}
 <div class="icp-info">
-<a href="http://www.miitbeian.gov.cn/">{{ config.icp }}</a> 
+<a href="http://www.beian.miit.gov.cn/">{{ config.icp }}</a> 
 </div>
 {% endif %}
 
