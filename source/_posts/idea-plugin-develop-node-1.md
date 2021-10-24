@@ -1,4 +1,4 @@
-title: 《IDEA插件开发尝试》
+title: IDEA插件开发尝试
 date: 2021-10-23 13:57:57
 categories: Try
 tags: [Java,IDEA,插件]
