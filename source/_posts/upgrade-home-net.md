@@ -111,7 +111,7 @@ NAS 移动到其他空间之后，此时 NAS 的供电和网络等附属设备�
 
 ![](https://blog.wislay.com/wp-content/uploads/2023/11/blog-xike-6500pro-mac-web-speed-test.jpeg)
 
-看着测速结果，我在想，我原本是要做什么来着？还是立刻打住吧
+看着测速结果，在想原本是要做什么来着？还是立刻打住继续发散的想法吧。
 
 
 
