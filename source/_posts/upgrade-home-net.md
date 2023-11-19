@@ -1,6 +1,8 @@
 title: 家庭网络的若干升级
 date: 2023-11-16 21:38:12
+categories: Try
 tags: [NAS,光纤,交换机,vlan]
+
 ---
 
 
